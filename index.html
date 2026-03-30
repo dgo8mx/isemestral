@@ -1,0 +1,1964 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formato Temporal SEMARNAT | Informe Semestral Art. 92 Bis | Centros Forestales</title>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{
+  --v:#1b4332;--vm:#2d6a4f;--vl:#52b788;--vp:#b7e4c7;
+  --g:#6d1931;--gm:#9b2335;--gl:#c0392b;
+  --o:#c9963c;--ol:#e8c27a;--op:#fdf3dc;
+  --a:#1a3a5c;--al:#e8f0f8;
+  --pa:#faf8f4;--pd:#f2ede4;
+  --borde:#d4c9b8;--bd:#b8a99a;
+  --t:#1a1a1a;--tm:#3d3d3d;--tl:#6b6b6b;
+  --sh:rgba(27,67,50,.12);
+  --r:6px;--rl:10px;--tr:.2s ease;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'IBM Plex Sans',sans-serif;background:#0f1f15;color:var(--t);min-height:100vh;font-size:14px}
+
+/* HEADER */
+.hdr{background:linear-gradient(135deg,#0a1a0f,#1b4332 50%,#0f2d1e);border-bottom:3px solid var(--o);position:sticky;top:0;z-index:200;box-shadow:0 4px 30px rgba(0,0,0,.5)}
+.hdr-strip{background:var(--g);height:4px}
+.hdr-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:10px 22px}
+.hdr-logos{display:flex;align-items:center;gap:10px;border-right:1px solid rgba(201,150,60,.3);padding-right:14px;flex-shrink:0}
+.logo-gov{font-family:'Crimson Pro',serif;font-size:11px;font-weight:700;color:var(--ol);letter-spacing:2px;text-transform:uppercase}
+.logo-sub{font-size:10px;color:var(--vp);letter-spacing:.3px}
+.hdr-title{flex:1}
+.hdr-title h1{font-family:'Crimson Pro',serif;font-size:16px;font-weight:700;color:var(--ol);line-height:1.2}
+.hdr-title .sub{font-size:10px;color:var(--vp);margin-top:2px;font-family:'IBM Plex Mono',monospace;letter-spacing:.5px;text-transform:uppercase}
+.hdr-meta{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.fmt-badge{background:var(--g);border:1px solid var(--o);padding:4px 12px;border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--ol);letter-spacing:1px}
+.fmt-note{font-size:9px;color:rgba(183,228,199,.6);font-family:'IBM Plex Mono',monospace;text-align:right}
+.db-pill{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.05);border:1px solid rgba(201,150,60,.25);padding:4px 10px;border-radius:20px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--vp)}
+.db-dot{width:7px;height:7px;border-radius:50%;background:#4caf50;animation:blink 2s infinite;flex-shrink:0}
+.db-dot.warn{background:var(--o)}.db-dot.err{background:var(--gl);animation:none}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* USER TOGGLE */
+.user-toggle{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);border:1px solid rgba(201,150,60,.25);padding:6px 14px;border-radius:20px;cursor:pointer}
+.user-toggle select{background:none;border:none;color:var(--ol);font-family:'IBM Plex Mono',monospace;font-size:11px;cursor:pointer;outline:none}
+.user-toggle select option{background:#1b4332;color:white}
+.user-lbl{font-size:10px;color:rgba(183,228,199,.7);font-family:'IBM Plex Mono',monospace}
+
+/* NAV */
+.nav{background:rgba(0,0,0,.3);border-bottom:1px solid rgba(201,150,60,.2);overflow-x:auto}
+.nav-in{max-width:1400px;margin:0 auto;display:flex;padding:0 22px}
+.tab{display:flex;align-items:center;gap:7px;padding:11px 18px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:rgba(183,228,199,.6);cursor:pointer;border:none;background:none;border-bottom:3px solid transparent;transition:var(--tr);white-space:nowrap;font-family:'IBM Plex Sans',sans-serif}
+.tab:hover{color:var(--ol)}
+.tab.on{color:var(--o);border-bottom-color:var(--o);background:rgba(201,150,60,.06)}
+.tab .ti{font-size:14px}
+.tab .tb{background:var(--g);color:#fff;font-size:9px;padding:1px 6px;border-radius:10px;font-weight:700;min-width:18px;text-align:center}
+/* ONLY-SEMARNAT tabs — hidden in centros version */
+.tab.semarnat-only{display:none!important}
+.tab.semarnat-only::after{content:'SEMARNAT';position:absolute;top:3px;right:4px;font-size:7px;background:var(--g);color:white;padding:1px 4px;border-radius:3px;letter-spacing:.3px}
+
+/* MAIN */
+.main{max-width:1400px;margin:0 auto;padding:22px}
+.page{display:none}
+.page.on{display:block;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* CARDS */
+.card{background:var(--pa);border-radius:var(--rl);border:1px solid var(--borde);overflow:hidden;box-shadow:0 2px 16px var(--sh);margin-bottom:18px}
+.ch{background:linear-gradient(135deg,var(--v),#234d3a);padding:11px 18px;display:flex;align-items:center;gap:10px;border-bottom:2px solid var(--o)}
+.ch.guinda{background:linear-gradient(135deg,var(--g),#8b1e30)}
+.ch h2{font-family:'Crimson Pro',serif;font-size:14px;font-weight:700;color:var(--ol);flex:1}
+.sn{background:var(--o);color:var(--v);width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;font-family:'IBM Plex Mono',monospace}
+.cb{padding:18px}
+
+/* FORMATO HEADER */
+.fh{background:linear-gradient(135deg,var(--g),#8b2030);border-radius:var(--rl) var(--rl) 0 0;padding:14px 22px;border-bottom:3px solid var(--o);position:relative;overflow:hidden}
+.fh::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fff' fill-opacity='.03'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")}
+.fh-meta{display:grid;grid-template-columns:220px 1fr 200px 100px;gap:0;border:1px solid rgba(201,150,60,.4);border-radius:6px;overflow:hidden;background:rgba(0,0,0,.2);margin-bottom:10px;position:relative}
+.fmc{padding:7px 12px;border-right:1px solid rgba(201,150,60,.3)}
+.fmc:last-child{border-right:none}
+.fml{font-size:9px;color:rgba(232,194,122,.7);text-transform:uppercase;letter-spacing:.8px;font-family:'IBM Plex Mono',monospace;margin-bottom:2px}
+.fmv{font-size:12px;font-weight:600;color:var(--ol);font-family:'IBM Plex Mono',monospace}
+.fh-title{font-family:'Crimson Pro',serif;font-size:15px;font-weight:700;color:white;text-align:center;position:relative}
+.fh-sub{font-size:10px;color:rgba(255,255,255,.6);text-align:center;margin-top:3px;position:relative}
+.fh-temporal{background:rgba(201,150,60,.15);border:1px solid rgba(201,150,60,.4);border-radius:4px;padding:4px 12px;margin-top:8px;position:relative;text-align:center;font-size:10px;color:var(--ol);font-family:'IBM Plex Mono',monospace;letter-spacing:.5px}
+
+/* CAMPOS */
+.campo{display:flex;flex-direction:column;gap:4px}
+.campo label{display:flex;align-items:center;gap:5px;font-size:10.5px;font-weight:600;color:var(--tm);text-transform:uppercase;letter-spacing:.5px}
+.cn{display:inline-flex;align-items:center;justify-content:center;background:var(--v);color:white;width:17px;height:17px;border-radius:3px;font-size:9px;font-weight:700;font-family:'IBM Plex Mono',monospace;flex-shrink:0}
+.cn.g{background:var(--g)}.cn.o{background:var(--o);color:var(--v)}
+.campo input,.campo select,.campo textarea{border:1.5px solid var(--borde);border-radius:var(--r);padding:8px 11px;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--t);background:white;transition:border-color var(--tr),box-shadow var(--tr);outline:none;width:100%}
+.campo input:focus,.campo select:focus,.campo textarea:focus{border-color:var(--vm);box-shadow:0 0 0 3px rgba(45,106,79,.12);background:#fafffe}
+.campo input.mono{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.5px}
+.campo textarea{resize:vertical;min-height:70px}
+.campo .readonly{background:var(--pd)!important;color:var(--tl)!important;cursor:default}
+
+/* AUTOCOMPLETE */
+.ac-wrap{position:relative}
+.ac-list{position:absolute;top:100%;left:0;right:0;background:white;border:1.5px solid var(--vm);border-top:none;border-radius:0 0 var(--r) var(--r);z-index:100;max-height:220px;overflow-y:auto;box-shadow:0 8px 20px rgba(0,0,0,.15);display:none}
+.ac-list.open{display:block}
+.ac-item{padding:8px 12px;cursor:pointer;font-size:12px;border-bottom:1px solid #f0f0f0;transition:background .15s}
+.ac-item:hover{background:var(--al)}
+.ac-item .ac-main{font-weight:600;color:var(--v)}
+.ac-item .ac-sub{font-size:10px;color:var(--tl);margin-top:2px}
+.ac-item .ac-rfc{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--g)}
+.ac-empty{padding:12px;text-align:center;font-size:12px;color:var(--tl);font-style:italic}
+
+/* GRID */
+.fg{display:grid;gap:13px}
+.fg2{grid-template-columns:1fr 1fr}.fg3{grid-template-columns:1fr 1fr 1fr}.fg4{grid-template-columns:1fr 1fr 1fr 1fr}
+.fga{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+.s2{grid-column:span 2}.s3{grid-column:span 3}.s4{grid-column:span 4}
+
+/* SECTION BAR */
+.sbar{background:linear-gradient(90deg,var(--v),var(--vm));padding:8px 16px;display:flex;align-items:center;gap:10px;margin:18px -18px}
+.sbar.g{background:linear-gradient(90deg,var(--g),var(--gm))}
+.sbar h3{font-family:'Crimson Pro',serif;font-size:13px;font-weight:700;color:var(--ol);flex:1}
+.sbar .sbg{background:var(--o);color:var(--v);padding:3px 10px;border-radius:3px;font-size:10px;font-weight:800;font-family:'IBM Plex Mono',monospace}
+
+/* TIPO SELECTOR */
+.tipo-row{display:flex;gap:10px;margin:12px 0}
+.tipo-opt{flex:1;display:flex;align-items:center;gap:10px;padding:11px 14px;border:2px solid var(--borde);border-radius:var(--r);cursor:pointer;transition:var(--tr);background:white}
+.tipo-opt:hover{border-color:var(--vm)}
+.tipo-opt.on{border-color:var(--v);background:#e8f5e9}
+.tipo-opt.on.g{border-color:var(--g);background:#fde8ed}
+.tipo-opt input[type=radio]{width:17px;height:17px;accent-color:var(--v);cursor:pointer;flex-shrink:0}
+.tipo-icon{font-size:22px}.tipo-main{font-size:12px;font-weight:700;color:var(--v);text-transform:uppercase;letter-spacing:.5px}
+.tipo-sub{font-size:10px;color:var(--tl)}
+
+/* TABLA REGISTRO */
+.rt-wrap{overflow-x:auto;margin-top:4px}
+.rt{width:100%;border-collapse:collapse;font-size:11.5px;min-width:900px}
+.rt thead tr{background:linear-gradient(135deg,var(--v),#2d6a4f)}
+.rt.g thead tr{background:linear-gradient(135deg,var(--g),#9b2335)}
+.rt th{padding:9px 7px;text-align:left;font-size:9.5px;text-transform:uppercase;letter-spacing:.6px;font-weight:700;color:var(--ol);white-space:nowrap;border-right:1px solid rgba(201,150,60,.2)}
+.rt th:last-child{border-right:none}
+.rt th .tn{display:block;font-size:8px;color:rgba(232,194,122,.6);font-family:'IBM Plex Mono',monospace;margin-bottom:1px}
+.rt td{padding:6px 7px;border-bottom:1px solid #e8e2d8;border-right:1px solid #ece8e0;vertical-align:middle}
+.rt td:last-child{border-right:none}
+.rt tr:hover td{background:#f5f2ec}
+.rn{text-align:center;font-size:10px;color:var(--tl);font-family:'IBM Plex Mono',monospace;font-weight:600;background:#f0ece4;width:28px}
+.rt input,.rt select{width:100%;border:1.5px solid #ddd8ce;border-radius:4px;padding:5px 7px;font-size:11.5px;font-family:'IBM Plex Sans',sans-serif;color:var(--t);background:white;outline:none;transition:border-color var(--tr)}
+.rt input:focus,.rt select:focus{border-color:var(--vm);background:#f8fffb}
+.rt input.nf{font-family:'IBM Plex Mono',monospace;text-align:right}
+.rt tfoot td{background:#e8ede9;font-weight:700;border-top:2px solid var(--v);font-size:12px;color:var(--v);padding:8px}
+.rt.g tfoot td{background:#ede8ea;border-top-color:var(--g);color:var(--g)}
+.bdel{background:none;border:none;color:#c0392b;cursor:pointer;font-size:14px;padding:3px 6px;border-radius:3px;transition:background var(--tr)}
+.bdel:hover{background:#fde8e8}
+
+/* BALANCE */
+.bal-box{background:linear-gradient(135deg,#e8f5e9,#f1f8f2);border:2px solid var(--v);border-radius:var(--rl);overflow:hidden;margin-top:14px}
+.bal-hd{background:var(--v);padding:9px 16px;display:flex;align-items:center;gap:8px}
+.bal-hd span{font-family:'Crimson Pro',serif;font-size:13px;font-weight:700;color:var(--ol)}
+.bal-ref{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--vp);margin-left:auto}
+.bal-grid{display:grid;grid-template-columns:repeat(4,1fr);padding:14px;gap:10px}
+.bc{background:white;border-radius:7px;padding:11px 13px;border:1px solid #c8e6ca;text-align:center;position:relative}
+.bc.fin{background:var(--v);border-color:var(--v)}
+.bco{position:absolute;left:-10px;top:50%;transform:translateY(-50%);background:var(--vl);color:white;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.bcl{font-size:9.5px;color:var(--tl);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.bc.fin .bcl{color:var(--vp)}
+.bcv{font-size:22px;font-weight:700;font-family:'IBM Plex Mono',monospace;color:var(--v);line-height:1}
+.bc.fin .bcv{color:var(--ol)}
+.bcu{font-size:9px;color:var(--tl);margin-top:2px}
+.bc.fin .bcu{color:var(--vp)}
+.bal-formula{padding:9px 16px 12px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--vm);border-top:1px dashed #c8e6ca}
+
+/* FIRMA */
+.firma-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px}
+.firma-box{border:1.5px dashed var(--bd);border-radius:var(--r);padding:14px;background:var(--pd);text-align:center}
+.firma-line{border-top:1.5px solid #aaa;margin:14px auto 6px;width:80%}
+.firma-cap{font-size:10px;color:var(--tl);font-style:italic}
+
+/* BOTONES */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 17px;border-radius:var(--r);font-size:11.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;transition:var(--tr);border:none;font-family:'IBM Plex Sans',sans-serif}
+.btn-v{background:var(--v);color:white;box-shadow:0 2px 8px rgba(27,67,50,.3)}.btn-v:hover{background:var(--vm);transform:translateY(-1px)}
+.btn-g{background:var(--g);color:white;box-shadow:0 2px 8px rgba(109,25,49,.3)}.btn-g:hover{background:var(--gm);transform:translateY(-1px)}
+.btn-o{background:var(--o);color:var(--v);box-shadow:0 2px 8px rgba(201,150,60,.3);font-weight:800}.btn-o:hover{background:var(--ol)}
+.btn-out{background:transparent;border:2px solid var(--v);color:var(--v)}.btn-out:hover{background:var(--v);color:white}
+.btn-sm{padding:6px 13px;font-size:11px}.btn-xs{padding:4px 10px;font-size:10px}
+.bico{background:none;border:none;padding:5px;cursor:pointer;border-radius:4px;transition:background var(--tr);font-size:15px;line-height:1}
+.bico:hover{background:rgba(0,0,0,.07)}
+
+/* ACTION BAR */
+.abar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:13px 18px;background:#f0ece4;border-top:1px solid var(--borde)}
+.abar .sp{flex:1}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:13px;margin-bottom:18px}
+.sc{background:var(--pa);border-radius:var(--rl);border:1px solid var(--borde);padding:15px 17px;box-shadow:0 2px 10px var(--sh);position:relative;overflow:hidden}
+.sc::after{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.sc-v::after{background:var(--v)}.sc-g::after{background:var(--g)}.sc-o::after{background:var(--o)}.sc-a::after{background:var(--a)}.sc-r::after{background:#c0392b}
+.si{position:absolute;right:12px;top:12px;font-size:28px;opacity:.1}
+.sv{font-family:'IBM Plex Mono',monospace;font-size:28px;font-weight:700;line-height:1;margin-bottom:4px}
+.sc-v .sv{color:var(--v)}.sc-g .sv{color:var(--g)}.sc-o .sv{color:var(--o)}.sc-a .sv{color:var(--a)}.sc-r .sv{color:#c0392b}
+.sl{font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--tl)}
+.ss{font-size:10.5px;color:var(--tl);margin-top:5px}
+
+/* ALERTS */
+.alerta{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-radius:var(--r);font-size:12.5px;margin-bottom:10px;line-height:1.5}
+.a-info{background:var(--al);border-left:4px solid var(--a);color:var(--a)}
+.a-ok{background:#e8f5e9;border-left:4px solid var(--v);color:var(--v)}
+.a-warn{background:#fffde7;border-left:4px solid var(--o);color:#7a5c00}
+.a-err{background:#fde8e8;border-left:4px solid var(--gl);color:#7a0000}
+.ai{font-size:16px;flex-shrink:0;margin-top:1px}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.bv{background:#d4edda;color:#155724}.bw{background:#fff3cd;color:#856404}.br{background:#f8d7da;color:#721c24}.bi{background:#d1ecf1;color:#0c5460}.bg{background:#e2e3e5;color:#383d41}
+.dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+
+/* TABLES EXPEDIENTES */
+.et{width:100%;border-collapse:collapse;font-size:12px}
+.et th{background:var(--v);color:var(--ol);padding:9px 10px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.6px;font-weight:700;white-space:nowrap}
+.et td{padding:8px 10px;border-bottom:1px solid #e8e2d8;vertical-align:middle}
+.et tr:hover td{background:#f5f2ec}
+
+/* MRV */
+.mrv-g{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:18px}
+.mrv-c{border-radius:var(--rl);overflow:hidden;border:1px solid var(--borde);box-shadow:0 2px 12px var(--sh)}
+.mrv-hd{padding:12px 15px;display:flex;align-items:center;gap:10px}
+.mrv-m .mrv-hd{background:linear-gradient(135deg,#1a3a5c,#1a5276)}
+.mrv-r .mrv-hd{background:linear-gradient(135deg,var(--v),#2d6a4f)}
+.mrv-v .mrv-hd{background:linear-gradient(135deg,var(--g),#9b2335)}
+.mrv-hd h3{font-family:'Crimson Pro',serif;font-size:16px;font-weight:700;color:white}
+.mrv-sub{font-size:9.5px;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.5px}
+.mrv-let{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Crimson Pro',serif;font-size:22px;font-weight:700;color:white;background:rgba(255,255,255,.15);flex-shrink:0}
+.mrv-bd{padding:14px;background:var(--pa)}
+.mrv-it{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--borde);font-size:12px}
+.mrv-it:last-child{border-bottom:none}
+.mrv-val{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px}
+.prog{height:6px;background:#e8e2d8;border-radius:3px;margin-top:10px;overflow:hidden}
+.prog-bar{height:100%;border-radius:3px;transition:width .5s ease}
+.pg{background:var(--vl)}.po{background:var(--o)}.pr{background:var(--gl)}
+
+/* SEMAFORO */
+.sem{display:flex;align-items:center;gap:6px;background:#1a1a1a;padding:6px 8px;border-radius:20px;border:2px solid #333}
+.sem-l{width:14px;height:14px;border-radius:50%;opacity:.2;transition:opacity .3s}
+.sem-l.on{opacity:1}
+.sem-rojo{background:#e74c3c;box-shadow:0 0 8px #e74c3c}
+.sem-am{background:#f39c12;box-shadow:0 0 8px #f39c12}
+.sem-ver{background:#2ecc71;box-shadow:0 0 8px #2ecc71}
+
+/* FOLIO BANNER */
+.folio-b{background:linear-gradient(135deg,var(--v),#0f2d1e);border:2px solid var(--o);border-radius:var(--rl);padding:13px 22px;display:flex;align-items:center;gap:20px;margin-bottom:18px}
+.folio-lbl{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--vp);text-transform:uppercase;letter-spacing:1px}
+.folio-num{font-family:'IBM Plex Mono',monospace;font-size:24px;font-weight:700;color:var(--ol);letter-spacing:2px}
+
+/* FILTER BAR */
+.fbar{background:var(--pa);border:1px solid var(--borde);border-radius:var(--rl);padding:13px 17px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px;box-shadow:0 2px 8px var(--sh)}
+.fbar input,.fbar select{border:1.5px solid var(--borde);border-radius:var(--r);padding:7px 10px;font-size:12px;font-family:'IBM Plex Sans',sans-serif;outline:none;background:white;color:var(--t)}
+.fbar input:focus,.fbar select:focus{border-color:var(--vm)}
+
+/* MODAL */
+.mover{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:500;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.mover.open{display:flex}
+.modal{background:var(--pa);border-radius:var(--rl);box-shadow:0 24px 80px rgba(0,0,0,.4);border:1px solid var(--borde);overflow:hidden;max-width:600px;width:100%;animation:mIn .25s ease}
+@keyframes mIn{from{transform:translateY(30px) scale(.97);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+.mhd{background:linear-gradient(135deg,var(--v),#2d6a4f);padding:13px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--o)}
+.mhd h3{font-family:'Crimson Pro',serif;font-size:15px;font-weight:700;color:var(--ol)}
+.mclose{background:none;border:none;color:var(--vp);font-size:22px;cursor:pointer;line-height:1;padding:0}
+.mbody{padding:20px}.mfoot{padding:13px 18px;background:#f0ece4;border-top:1px solid var(--borde);display:flex;gap:8px;justify-content:flex-end}
+
+/* TOAST */
+.toast-box{position:fixed;top:74px;right:18px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{background:white;border-radius:8px;padding:10px 15px;box-shadow:0 4px 20px rgba(0,0,0,.15);display:flex;align-items:center;gap:10px;font-size:13px;min-width:270px;border-right:1px solid var(--borde);border-top:1px solid var(--borde);border-bottom:1px solid var(--borde);border-left:4px solid var(--v);animation:sIn .25s ease}
+.toast.err{border-left-color:var(--gl)}.toast.warn{border-left-color:var(--o)}
+@keyframes sIn{from{transform:translateX(110%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* CONFIG */
+.cp{background:var(--pa);border:1px solid var(--borde);border-radius:var(--rl);overflow:hidden;margin-bottom:14px;box-shadow:0 2px 8px var(--sh)}
+.ch2{background:#f0ece4;padding:10px 17px;font-size:12px;font-weight:700;color:var(--v);text-transform:uppercase;letter-spacing:.7px;border-bottom:1px solid var(--borde);display:flex;align-items:center;gap:8px}
+.cb2{padding:17px}
+.sql-v{background:#0f1e14;border-radius:7px;padding:14px 17px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#a8d5b5;line-height:1.8;overflow-x:auto;border:1px solid rgba(201,150,60,.2);white-space:pre;max-height:380px;overflow-y:auto}
+
+/* MISC */
+.dvd{height:1px;background:var(--borde);margin:16px 0}
+.hrgold{border:none;border-top:1px solid rgba(201,150,60,.3);margin:14px 0}
+.mono{font-family:'IBM Plex Mono',monospace}
+.scroll{overflow-x:auto}
+.hidden{display:none!important}
+
+/* USER INDICATOR */
+.user-indicator{background:rgba(255,255,255,.05);border:1px solid rgba(201,150,60,.2);border-radius:6px;padding:3px 10px;font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--ol);display:flex;align-items:center;gap:5px}
+.user-indicator.u-centro{border-color:rgba(82,183,136,.4)}
+.user-indicator.u-semarnat{border-color:rgba(201,150,60,.5)}
+
+/* PRECARGA INDICATOR */
+.precarga-ok{background:#e8f5e9;border:1px solid var(--vl);border-radius:4px;padding:4px 10px;font-size:10px;color:var(--v);font-family:'IBM Plex Mono',monospace;display:none;align-items:center;gap:5px;margin-top:4px}
+.precarga-ok.show{display:flex}
+
+@media(max-width:900px){.stats{grid-template-columns:1fr 1fr}.mrv-g{grid-template-columns:1fr}.bal-grid{grid-template-columns:1fr 1fr}.fg3,.fg4{grid-template-columns:1fr 1fr}.firma-grid{grid-template-columns:1fr}.hdr-inner{padding:9px 13px;gap:9px}.main{padding:13px}.tipo-row{flex-direction:column}}
+@media print{.hdr,.nav,.abar,.fbar,.btn,.toast-box{display:none!important}body{background:white}.page{display:block!important}.card{box-shadow:none}.main{max-width:100%;padding:0}}
+</style>
+</head>
+<body>
+<div class="toast-box" id="toastBox"></div>
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-strip"></div>
+  <div class="hdr-inner">
+    <div class="hdr-logos">
+      <svg width="40" height="40" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="21" cy="21" r="20" fill="none" stroke="#c9963c" stroke-width="1.5"/>
+        <path d="M14 14 Q21 6 28 14 Q35 21 28 28 Q21 36 14 28 Q7 21 14 14Z" fill="rgba(27,67,50,0.4)" stroke="#c9963c" stroke-width="1"/>
+        <text x="21" y="25" text-anchor="middle" font-size="11" fill="#e8c27a" font-family="serif">🌲</text>
+      </svg>
+      <div class="hdr-logos">
+        <div class="logo-gov">GOBIERNO DE MÉXICO</div>
+        <div class="logo-sub">SEMARNAT · Durango</div>
+      </div>
+    </div>
+    <div class="hdr-title">
+      <h1>Sistema de Control de Centros de Transformación Forestal</h1>
+      <div class="sub">Formato Temporal SEMARNAT · Art. 92 Bis LGDFS · Oficina de Representación Federal Durango</div>
+    </div>
+    <!-- USER SELECTOR -->
+    <div class="user-toggle" title="Tipo de usuario activo">
+      <span class="user-lbl">Perfil:</span>
+      <select id="userSelect" onchange="cambiarPerfil(this.value)" disabled style="opacity:0.7;cursor:not-allowed">
+        <option value="centro">👤 Responsable de Centro</option>
+        <option value="semarnat">🏛️ Oficial SEMARNAT</option>
+      </select>
+    </div>
+    <div class="user-indicator u-centro" id="userIndicator">
+      <span id="userIndicatorIcon">👤</span>
+      <span id="userIndicatorTxt">Responsable de Centro</span>
+    </div>
+    <div class="hdr-meta">
+      <div class="fmt-badge">FORMATO TEMPORAL SEMARNAT</div>
+      <div style="background:rgba(109,25,49,0.5);border:1px solid rgba(201,150,60,0.5);padding:2px 10px;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:#e8c27a;letter-spacing:.5px;margin-top:3px">🏭 VERSIÓN CENTROS FORESTALES</div>
+      <div class="fmt-note">Art. 92 Bis LGDFS · DOF 11-04-2022</div>
+      <div class="db-pill" style="margin-top:4px">
+        <div class="db-dot warn" id="dbDot"></div>
+        <span id="dbTxt">Sin configurar</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-in">
+    <button class="tab on" id="tab-dashboard" onclick="showPage('dashboard')"><span class="ti">📊</span> Panel MRV</button>
+    <button class="tab" id="tab-formato" onclick="showPage('formato')"><span class="ti">📋</span> Formato Temporal</button>
+    <button class="tab" id="tab-entradas" onclick="showPage('entradas')"><span class="ti">📥</span> Registro Entradas</button>
+    <button class="tab" id="tab-salidas" onclick="showPage('salidas')"><span class="ti">📤</span> Registro Salidas</button>
+    <button class="tab" id="tab-balance" onclick="showPage('balance')"><span class="ti">⚖️</span> Balance · Campo 40</button>
+    <button class="tab" id="tab-expedientes" onclick="showPage('expedientes')"><span class="ti">🗂️</span> Expedientes <span class="tb" id="badge-exp">0</span></button>
+    <button class="tab semarnat-only" id="tab-mrv" onclick="showPage('mrv')"><span class="ti">🔍</span> MRV</button>
+    <button class="tab semarnat-only" id="tab-config" onclick="showPage('config')"><span class="ti">⚙️</span> Supabase</button>
+  </div>
+</nav>
+
+<main class="main">
+
+<!-- ══════════════════ DASHBOARD ══════════════════ -->
+<div class="page on" id="page-dashboard">
+  <div style="background:linear-gradient(135deg,#1b4332,#0f2d1e);border:1px solid rgba(201,150,60,.3);border-radius:10px;padding:13px 18px;margin-bottom:18px;display:flex;align-items:flex-start;gap:14px">
+    <div style="font-size:20px;flex-shrink:0;margin-top:2px">📜</div>
+    <div style="flex:1">
+      <div style="font-family:'Crimson Pro',serif;font-size:13px;font-weight:700;color:#e8c27a;margin-bottom:4px">Artículo 92 Bis — Ley General de Desarrollo Forestal Sustentable (DOF 11-04-2022)</div>
+      <div style="font-size:11.5px;color:rgba(183,228,199,.85);line-height:1.7;font-style:italic">"Los titulares de centros de almacenamiento y de transformación de materias primas forestales están obligados a presentar informes semestrales a la Secretaría sobre las existencias y movimientos registrados durante cada período, en los primeros diez días hábiles de julio y enero."</div>
+    </div>
+    <div style="flex-shrink:0;text-align:right">
+      <div style="background:rgba(201,150,60,.15);border:1px solid rgba(201,150,60,.4);border-radius:6px;padding:7px 13px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#e8c27a;line-height:1.8">
+        <div>FORMATO TEMPORAL</div><div>SEMARNAT</div><div style="font-size:8px;opacity:.7">Hasta publicación formato oficial</div>
+      </div>
+    </div>
+  </div>
+  <!-- Stats -->
+  <div class="stats">
+    <div class="sc sc-v"><div class="si">🌲</div><div class="sv" id="kpi-centros">0</div><div class="sl">Centros Registrados</div><div class="ss">BD: 1,668 autorizados</div></div>
+    <div class="sc sc-g"><div class="si">📋</div><div class="sv" id="kpi-informes">0</div><div class="sl">Libros Capturados</div><div class="ss">En el sistema</div></div>
+    <div class="sc sc-a"><div class="si">📦</div><div class="sv" id="kpi-vol">0</div><div class="sl">m³ Registrados</div><div class="ss">Volumen total entradas</div></div>
+    <div class="sc sc-o"><div class="si">⚖️</div><div class="sv" id="kpi-balance">0</div><div class="sl">Balance Neto</div><div class="ss">Existencias actuales</div></div>
+    <div class="sc sc-r"><div class="si">⚠️</div><div class="sv" id="kpi-pend">0</div><div class="sl">Sin Validar</div><div class="ss">Requieren revisión</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+    <div class="card">
+      <div class="ch"><div class="sn">📋</div><h2>Últimos Libros de Registro</h2><button class="btn btn-xs btn-o" style="margin-left:auto" onclick="showPage('expedientes')">Ver todos</button></div>
+      <div style="padding:0"><table class="et" style="font-size:11.5px"><thead><tr><th>Folio</th><th>Centro</th><th>Período</th><th>Género</th><th>Estado</th></tr></thead><tbody id="dash-tabla"><tr><td colspan="5" style="text-align:center;padding:22px;color:#999">Sin registros. <a href="#" onclick="showPage('formato')" style="color:var(--v)">Crear el primero →</a></td></tr></tbody></table></div>
+    </div>
+    <div class="card">
+      <div class="ch"><div class="sn">📖</div><h2>Flujo de Captura</h2></div>
+      <div class="cb" style="display:flex;flex-direction:column;gap:9px">
+        <div class="alerta a-info"><span class="ai">① </span><div><strong>Buscar centro por RFC o Código ID</strong> — el sistema precarga automáticamente los datos generales desde la base de datos SEMARNAT (1,668 centros autorizados en Durango).</div></div>
+        <div class="alerta a-info"><span class="ai">② </span><div><strong>Sección II — Entradas</strong> (Campos 13–27) — género, período, volumen inicial, documentos de entrada con folio de imprenta y proveedor.</div></div>
+        <div class="alerta a-info"><span class="ai">③ </span><div><strong>Sección III — Salidas</strong> (Campos 28–42) — reembarques o facturas, destinatario, tipo de producto, volumen amparado.</div></div>
+        <div class="alerta a-ok"><span class="ai">⚖️</span><div><strong>Balance Campo 40:</strong> Existencia Inicial + Entradas − Salidas = Balance Final (calculado automáticamente).</div></div>
+        <div class="alerta a-warn"><span class="ai">⚠️</span><div>Plazo: <strong>10 días hábiles</strong> de julio (1er sem.) y enero (2do sem.). El libro debe resguardarse para actos de inspección.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ FORMATO TEMPORAL ══════════════════ -->
+<div class="page" id="page-formato">
+  <!-- Folio banner -->
+  <div class="folio-b">
+    <div>
+      <div class="folio-lbl">Folio del Libro de Registro</div>
+      <div class="folio-num" id="folio-display">SEMARNAT-DGO-2024-001</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:2px">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(183,228,199,.7)">LUGAR DE LA SOLICITUD</div>
+      <div style="display:flex;gap:7px">
+        <input type="text" id="f_est" value="Durango" readonly class="campo-input mono" style="width:90px;font-size:11px;padding:5px 8px;background:rgba(255,255,255,.1);border:1px solid rgba(201,150,60,.3);color:#e8c27a;font-family:'IBM Plex Mono',monospace;border-radius:4px">
+        <input type="text" id="f_mun_sol" placeholder="Municipio" style="width:120px;font-size:11px;padding:5px 8px;background:rgba(255,255,255,.1);border:1px solid rgba(201,150,60,.3);color:#e8c27a;font-family:'IBM Plex Mono',monospace;border-radius:4px;outline:none">
+        <input type="text" id="f_loc_sol" placeholder="Localidad" style="width:110px;font-size:11px;padding:5px 8px;background:rgba(255,255,255,.1);border:1px solid rgba(201,150,60,.3);color:#e8c27a;font-family:'IBM Plex Mono',monospace;border-radius:4px;outline:none">
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:2px">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(183,228,199,.7)">FECHA DE LA SOLICITUD</div>
+      <input type="date" id="f_fecha_sol" style="font-size:12px;padding:5px 8px;background:rgba(255,255,255,.1);border:1px solid rgba(201,150,60,.3);color:#e8c27a;border-radius:4px;outline:none;font-family:'IBM Plex Mono',monospace">
+    </div>
+    <div style="margin-left:auto"><span class="badge bw" id="folio-est-badge"><span class="dot"></span> Borrador</span></div>
+  </div>
+
+  <div class="card">
+    <!-- Formato header oficial style -->
+    <div class="fh">
+      <div class="fh-meta">
+        <div class="fmc"><div class="fml">Institución</div><div class="fmv">SEMARNAT</div></div>
+        <div class="fmc"><div class="fml">Dependencia</div><div class="fmv">Oficina de Representación · Durango</div></div>
+        <div class="fmc" id="periodo-fmc"><div class="fml">Período del Registro</div><div class="fmv" id="periodo-display">— Sin definir —</div></div>
+        <div class="fmc"><div class="fml">Año</div><div class="fmv" id="anio-display">2024</div></div>
+      </div>
+      <div class="fh-title">Libro de Registro de Entradas y Salidas de Materias Primas y Productos Forestales</div>
+      <div class="fh-sub">Secretaría de Medio Ambiente y Recursos Naturales · Gestión Forestal y de Suelos</div>
+      <div class="fh-temporal">⚠ FORMATO TEMPORAL · Art. 92 Bis LGDFS (DOF 11-04-2022) · En tanto se publica el formato oficial SEMARNAT</div>
+    </div>
+
+    <div class="cb">
+      <!-- BUSCAR CENTRO -->
+      <div style="background:linear-gradient(135deg,#e8f5e9,#f5fef6);border:2px solid var(--v);border-radius:8px;padding:14px 18px;margin-bottom:18px">
+        <div style="font-size:11.5px;font-weight:700;color:var(--v);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">🔍 Búsqueda en Base de Datos SEMARNAT · 1,668 Centros Autorizados en Durango</div>
+        <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
+          <div style="flex:2;min-width:200px">
+            <div style="font-size:10px;color:var(--tl);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Buscar por nombre, RFC o código de identificación</div>
+            <div class="ac-wrap">
+              <input type="text" id="busq-centro" placeholder="Ej: RICA971013J39 · T-10-023-XXX · Aserradero El Tablón..." style="width:100%;border:1.5px solid var(--borde);border-radius:var(--r);padding:9px 12px;font-size:13px;font-family:'IBM Plex Sans',sans-serif;outline:none;transition:border-color var(--tr)" oninput="buscarCentro(this.value)" onfocus="mostrarAC()" onblur="setTimeout(ocultarAC,200)">
+              <div class="ac-list" id="ac-list"></div>
+            </div>
+          </div>
+          <button class="btn btn-v" onclick="limpiarBusqueda()">✕ Limpiar</button>
+        </div>
+        <div class="precarga-ok" id="precarga-ok">✅ Datos precargados desde base de datos SEMARNAT · <span id="precarga-fuente"></span></div>
+      </div>
+
+      <!-- SECCIÓN I -->
+      <div class="sbar"><span class="sbg">SEC. I</span><h3>Datos Generales del Centro de Almacenamiento y Transformación o Centro No Integrado a un Centro de Transformación Primaria</h3></div>
+
+      <div class="fg fga" style="margin-top:14px">
+        <div class="campo s2">
+          <label><span class="cn">1</span> Nombre del Titular o Denominación o Razón Social del Centro</label>
+          <input type="text" id="f1_nombre" placeholder="Nombre completo o razón social" required>
+        </div>
+        <div class="campo">
+          <label><span class="cn">2</span> RFC</label>
+          <input type="text" id="f2_rfc" class="mono" placeholder="XXXX000000XXX" maxlength="13" style="text-transform:uppercase" oninput="this.value=this.value.toUpperCase()">
+        </div>
+        <div class="campo">
+          <label><span class="cn">3</span> Representante Legal (si aplica)</label>
+          <input type="text" id="f3_rep" placeholder="Nombre completo">
+        </div>
+      </div>
+
+      <div class="fg" style="margin-top:11px">
+        <div class="campo">
+          <label><span class="cn">4</span> Domicilio del Centro</label>
+          <input type="text" id="f4_dom" placeholder="Calle, número, colonia, localidad, C.P., municipio">
+        </div>
+      </div>
+
+      <div class="fg fg4" style="margin-top:11px">
+        <div class="campo s2">
+          <label><span class="cn">5</span> Nombre Comercial</label>
+          <input type="text" id="f5_ncom" placeholder='"Aserradero El Tablón" o "Innominado"'>
+        </div>
+        <div class="campo s2">
+          <label><span class="cn">6</span> Giro Comercial</label>
+          <select id="f6_giro">
+            <option value="">— Seleccionar —</option>
+            <optgroup label="▸ Maderables">
+              <option>Aserradero</option><option>Maderería</option><option>Carpintería</option>
+              <option>Centro de producción de muebles</option><option>Carbonería</option><option>Leñería</option>
+              <option>Fábrica de tarimas que recibe madera en rollo</option>
+              <option>Fábrica de cajas de empaque</option><option>Fábrica de cajas y tarimas</option>
+              <option>Patio de concentración de trocería y/o rollizos</option>
+              <option>Centro de transformación primaria</option>
+              <option>Almacenamiento y transformación de materias primas forestales maderables</option>
+              <option>Compra y venta de madera</option>
+            </optgroup>
+            <optgroup label="▸ No Maderables">
+              <option>Resinera</option><option>Sotolera</option>
+              <option>Centro de almacenamiento de orégano</option>
+              <option>Centro de almacenamiento de tierra de monte</option>
+              <option>Centro de almacenamiento de heno y musgo</option>
+              <option>Acopiadora de candelilla</option><option>Otro no maderable</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
+
+      <div class="fg fg4" style="margin-top:11px">
+        <div class="campo s2">
+          <label><span class="cn">7</span> Correo Electrónico</label>
+          <input type="email" id="f7_correo" placeholder="correo@ejemplo.com">
+        </div>
+        <div class="campo s2">
+          <label><span class="cn">8</span> Teléfono(s)</label>
+          <input type="text" id="f8_tel" placeholder="(618) 000-0000">
+        </div>
+      </div>
+
+      <div class="fg fg4" style="margin-top:11px">
+        <div class="campo s2">
+          <label><span class="cn">9</span> Número de Oficio de Autorización del Centro</label>
+          <input type="text" id="f9_ofaut" class="mono" placeholder="No. de oficio SEMARNAT">
+        </div>
+        <div class="campo s2">
+          <label><span class="cn">10</span> De Fecha</label>
+          <input type="date" id="f10_fofaut">
+        </div>
+      </div>
+
+      <div class="fg fg4" style="margin-top:11px">
+        <div class="campo s2">
+          <label><span class="cn">11</span> Código de Identificación del Centro</label>
+          <input type="text" id="f11_cod" class="mono" placeholder="Ej: T-10-023-XXX-001/24">
+        </div>
+        <div class="campo s2">
+          <label><span class="cn">12</span> Registro Forestal Nacional</label>
+          <input type="text" id="f12_rfn" class="mono" placeholder='Número RFN o "En trámite"'>
+        </div>
+      </div>
+
+      <!-- SECCIÓN II -->
+      <div class="sbar" style="margin-top:22px"><span class="sbg">SEC. II</span><h3>Registro de Entradas de Materias Primas Forestales</h3></div>
+
+      <div style="margin-top:12px">
+        <div style="font-size:11px;font-weight:600;color:var(--tm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px">Elija el tipo de materia prima a registrar:</div>
+        <div class="tipo-row">
+          <label class="tipo-opt on" id="tmo-mad"><input type="radio" name="tipo_mat" value="maderable" checked onchange="selTipo('maderable')"><span class="tipo-icon">🌲</span><div><div class="tipo-main">Materias Primas Forestales Maderables</div><div class="tipo-sub">Pinus, Quercus, Abies, Cedrela…</div></div></label>
+          <label class="tipo-opt" id="tmo-nom"><input type="radio" name="tipo_mat" value="nomaderable" onchange="selTipo('nomaderable')"><span class="tipo-icon">🌿</span><div><div class="tipo-main">Materias Primas Forestales No Maderables</div><div class="tipo-sub">Euphorbia, Dasylirion, Lippia, Agave…</div></div></label>
+        </div>
+      </div>
+
+      <div class="fg fg4" style="margin-top:11px">
+        <div class="campo s2">
+          <label><span class="cn">13</span> Periodo</label>
+          <select id="f13_periodo" onchange="updPeriodo()">
+            <option value="">— Seleccionar período —</option>
+            <option value="1_2026">Primer Semestre 2026 (Enero–Junio 2026)</option>
+            <option value="2_2025">Segundo Semestre 2025 (Julio–Diciembre 2025)</option>
+            <option value="1_2025">Primer Semestre 2025 (Enero–Junio 2025)</option>
+            <option value="2_2024">Segundo Semestre 2024 (Julio–Diciembre 2024)</option>
+            <option value="1_2024">Primer Semestre 2024 (Enero–Junio 2024)</option>
+            <option value="2_2023">Segundo Semestre 2023</option>
+            <option value="1_2023">Primer Semestre 2023</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label><span class="cn">14</span> Género</label>
+          <input type="text" id="f14_gen" placeholder="Pinus, Quercus, Euphorbia…" oninput="syncGen()">
+        </div>
+        <div class="campo">
+          <label><span class="cn">15</span> Volumen Inicial</label>
+          <div style="display:flex;gap:6px">
+            <input type="number" id="f15_vi" class="mono" value="0" min="0" step="0.0001" style="flex:1" oninput="calcTot()">
+            <select id="f15_uni" style="width:75px;border:1.5px solid var(--borde);border-radius:var(--r);padding:8px 6px;font-size:12px;outline:none" onchange="calcTot()">
+              <option value="m3r">m³r</option><option value="m3">m³</option><option value="kg">kg</option><option value="lt">lt</option><option value="pz">pz</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla entradas -->
+      <div style="margin-top:14px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:7px">
+          <div style="font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.5px">Movimientos de Entrada</div>
+          <button class="btn btn-sm btn-out" onclick="addEnt()">➕ Agregar fila</button>
+        </div>
+        <div class="rt-wrap">
+          <table class="rt" id="tbl-ent">
+            <thead><tr>
+              <th style="width:28px">#</th>
+              <th style="min-width:102px"><span class="tn">Campo 16</span>Fecha Entrada</th>
+              <th style="min-width:118px"><span class="tn">Campo 17</span>Tipo Documento</th>
+              <th style="min-width:102px"><span class="tn">Campo 18</span>Fecha Expedición</th>
+              <th style="min-width:90px"><span class="tn">Campo 19</span>Folio Imprenta</th>
+              <th style="min-width:105px"><span class="tn">Campo 20</span>No. Oficio Aut.</th>
+              <th style="min-width:102px"><span class="tn">Campo 21</span>Fecha Oficio Aut.</th>
+              <th style="min-width:145px"><span class="tn">Campo 22</span>Nombre Proveedor</th>
+              <th style="min-width:115px"><span class="tn">Campo 23</span>Código ID Prov.</th>
+              <th style="min-width:125px"><span class="tn">Campo 24</span>Tipo Producto</th>
+              <th style="min-width:86px"><span class="tn">Campo 25</span>Volumen</th>
+              <th style="width:30px"></th>
+            </tr></thead>
+            <tbody id="ent-tbody"></tbody>
+            <tfoot><tr>
+              <td colspan="10" style="text-align:right;padding-right:10px"><span class="cn o" style="font-size:9px">26</span> &nbsp;<strong>Volumen Ingresado Durante el Período:</strong></td>
+              <td><strong id="ent-tot" class="mono">0.0000</strong></td><td></td>
+            </tr></tfoot>
+          </table>
+        </div>
+      </div>
+
+      <!-- Campo 27 -->
+      <div class="firma-grid" style="margin-top:14px">
+        <div class="campo">
+          <label><span class="cn">27</span> Nombre y Firma del Titular del Centro o su Representante Legal (Sección II)</label>
+          <input type="text" id="f27_firma_ent" placeholder="Nombre completo para firma">
+          <div class="firma-box" style="margin-top:8px">
+            <div style="font-size:11px;color:var(--tl);margin-bottom:12px">✍️ Firma</div>
+            <div class="firma-line"></div>
+            <div class="firma-cap">Nombre y firma del titular o representante legal</div>
+          </div>
+        </div>
+        <div></div>
+      </div>
+
+      <!-- SECCIÓN III -->
+      <div class="sbar g" style="margin-top:26px"><span class="sbg">SEC. III</span><h3>Registro de Salidas de Productos Forestales</h3></div>
+
+      <div style="margin-top:12px">
+        <div style="font-size:11px;font-weight:600;color:var(--tm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px">Elija el tipo de producto forestal a registrar:</div>
+        <div class="tipo-row">
+          <label class="tipo-opt on" id="tso-mad"><input type="radio" name="tipo_sal" value="maderable" checked onchange="selTipoSal('maderable')"><span class="tipo-icon">🌲</span><div><div class="tipo-main">Productos Forestales Maderables</div><div class="tipo-sub">Tablas, tablones, tarimas, carbón, etc.</div></div></label>
+          <label class="tipo-opt" id="tso-nom"><input type="radio" name="tipo_sal" value="nomaderable" onchange="selTipoSal('nomaderable')"><span class="tipo-icon">🌿</span><div><div class="tipo-main">Productos Forestales No Maderables</div><div class="tipo-sub">Resina, aguarrás, heno, cera, musgo, etc.</div></div></label>
+        </div>
+      </div>
+
+      <div class="fg fg4" style="margin-top:11px">
+        <div class="campo s2">
+          <label><span class="cn g">28</span> Periodo</label>
+          <input type="text" id="f28_per_sal" class="readonly" readonly placeholder="Se toma del período de Sección II">
+        </div>
+        <div class="campo s2">
+          <label><span class="cn g">29</span> Género</label>
+          <input type="text" id="f29_gen_sal" class="readonly" readonly placeholder="Se toma del género de Sección II">
+        </div>
+      </div>
+
+      <!-- Tabla salidas -->
+      <div style="margin-top:14px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:7px">
+          <div style="font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.5px">Movimientos de Salida</div>
+          <button class="btn btn-sm btn-g" style="font-size:10.5px;padding:6px 12px" onclick="addSal()">➕ Agregar fila</button>
+        </div>
+        <div class="rt-wrap">
+          <table class="rt g" id="tbl-sal">
+            <thead><tr>
+              <th style="width:28px">#</th>
+              <th style="min-width:118px"><span class="tn">Campo 30</span>Tipo Documento</th>
+              <th style="min-width:102px"><span class="tn">Campo 31</span>Fecha Expedición</th>
+              <th style="min-width:86px"><span class="tn">Campo 32</span>Folio</th>
+              <th style="min-width:105px"><span class="tn">Campo 33</span>No. Oficio Aut.*</th>
+              <th style="min-width:102px"><span class="tn">Campo 34</span>Fecha Oficio*</th>
+              <th style="min-width:145px"><span class="tn">Campo 35</span>Destinatario</th>
+              <th style="min-width:115px"><span class="tn">Campo 36</span>Código ID Dest.</th>
+              <th style="min-width:125px"><span class="tn">Campo 37</span>Tipo Producto</th>
+              <th style="min-width:86px"><span class="tn">Campo 38</span>Vol. Amparado</th>
+              <th style="width:30px"></th>
+            </tr></thead>
+            <tbody id="sal-tbody"></tbody>
+            <tfoot><tr>
+              <td colspan="9" style="text-align:right;padding-right:10px"><span class="cn g" style="font-size:9px">39</span> &nbsp;<strong>Volumen Total de Salidas Durante el Período:</strong></td>
+              <td><strong id="sal-tot" class="mono">0.0000</strong></td><td></td>
+            </tr></tfoot>
+          </table>
+        </div>
+        <div style="font-size:10px;color:var(--tl);margin-top:4px">* Campos 33 y 34 solo aplican para Centros de Almacenamiento y Transformación.</div>
+      </div>
+
+      <!-- Balance Campo 40 -->
+      <div class="bal-box" style="margin-top:18px">
+        <div class="bal-hd"><span>⚖️ Balance de Existencias del Período</span><span class="bal-ref">Campo 40 — Formato Temporal SEMARNAT · Art. 92 Bis LGDFS</span></div>
+        <div class="bal-grid">
+          <div class="bc"><div class="bcl">Existencia Inicial</div><div class="bcv" id="b40-ini">0.0000</div><div class="bcu">Campo 15</div></div>
+          <div class="bc" style="position:relative"><div class="bco" style="background:var(--vl)">+</div><div class="bcl">Vol. Total Entradas</div><div class="bcv" id="b40-ent">0.0000</div><div class="bcu">Campo 26</div></div>
+          <div class="bc" style="position:relative"><div class="bco" style="background:var(--gl)">−</div><div class="bcl">Vol. Total Salidas</div><div class="bcv" id="b40-sal">0.0000</div><div class="bcu">Campo 39</div></div>
+          <div class="bc fin" style="position:relative"><div class="bco" style="background:var(--o);color:var(--v)">=</div><div class="bcl">Balance Final</div><div class="bcv" id="b40-fin">0.0000</div><div class="bcu" id="b40-uni">m³r</div></div>
+        </div>
+        <div class="bal-formula" id="b40-formula">Balance = Existencia inicial + Vol. total entradas − Vol. total salidas</div>
+      </div>
+
+      <!-- Campos 41 y 42 -->
+      <div class="fg fg2" style="margin-top:14px">
+        <div class="campo">
+          <label><span class="cn g">41</span> Coeficiente de Transformación Obtenido Durante el Período</label>
+          <input type="text" id="f41_coef" class="mono" placeholder="Razón: Vol.Salidas ÷ Vol.Entradas — Solo aplica centros de transformación">
+        </div>
+        <div class="campo">
+          <label>Observaciones y/o Aclaraciones</label>
+          <textarea id="f_obs" placeholder="Mermas en almacenamiento, equivalencias de transformación, coeficientes, aclaraciones…"></textarea>
+        </div>
+      </div>
+
+      <div class="firma-grid" style="margin-top:14px">
+        <div class="campo">
+          <label><span class="cn g">42</span> Nombre y Firma del Titular del Centro o su Representante Legal (Sección III)</label>
+          <input type="text" id="f42_firma_sal" placeholder="Nombre completo">
+          <div class="firma-box" style="margin-top:8px">
+            <div style="font-size:11px;color:var(--tl);margin-bottom:12px">✍️ Firma</div>
+            <div class="firma-line"></div>
+            <div class="firma-cap">Nombre y firma del titular o representante legal</div>
+          </div>
+        </div>
+        <div class="campo">
+          <label>Código de Identificación (referencia para firma)</label>
+          <input type="text" id="f_cod_firma" class="mono" placeholder="Código asignado por SEMARNAT">
+          <div class="fg fg2" style="margin-top:9px;gap:8px">
+            <div class="campo"><label>Hoja No.</label><input type="number" id="f_hoja_n" class="mono" value="1" min="1"></div>
+            <div class="campo"><label>De</label><input type="number" id="f_hoja_t" class="mono" value="1" min="1"></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /cb -->
+    <div class="abar">
+      <button class="btn btn-out btn-sm" onclick="limpiarFormato()">🗑️ Nuevo Registro</button>
+      <div class="sp"></div>
+      <button class="btn btn-sm" style="background:#1a3a5c;color:white" onclick="exportarPDF()">📄 Exportar PDF</button>
+      <button class="btn btn-g btn-sm" onclick="guardarFormato()">💾 Guardar en Sistema</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ ENTRADAS VIEW ══════════════════ -->
+<div class="page" id="page-entradas">
+  <div class="alerta a-info" style="margin-bottom:14px"><span class="ai">ℹ️</span><div>Vista de la <strong>Sección II (Campos 16–26)</strong> del libro seleccionado. Para capturar un nuevo libro use la pestaña <strong>Formato Temporal</strong>.</div></div>
+  <div class="fbar">
+    <select id="sel-lib-ent" onchange="cargaMov('ent')" style="min-width:300px"><option value="">— Seleccionar Folio de Libro —</option></select>
+    <button class="btn btn-sm btn-v" onclick="showPage('formato')">➕ Nuevo Libro</button>
+  </div>
+  <div class="card">
+    <div class="ch"><div class="sn">II</div><h2>Movimientos de Entrada — Campos 16–26</h2></div>
+    <div class="scroll">
+      <table class="rt" style="min-width:900px">
+        <thead><tr><th><span class="tn">C.16</span>Fecha Ent.</th><th><span class="tn">C.17</span>Tipo Doc.</th><th><span class="tn">C.18</span>Fecha Exp.</th><th><span class="tn">C.19</span>Folio Imprenta</th><th><span class="tn">C.20</span>No. Oficio Aut.</th><th><span class="tn">C.22</span>Proveedor</th><th><span class="tn">C.23</span>Código ID</th><th><span class="tn">C.24</span>Tipo Producto</th><th><span class="tn">C.25</span>Volumen</th></tr></thead>
+        <tbody id="v-ent-tbody"><tr><td colspan="9" style="text-align:center;padding:22px;color:#999">Seleccione un libro de registro</td></tr></tbody>
+        <tfoot><tr><td colspan="8" style="text-align:right"><strong>Campo 26 — Vol. Total Entradas:</strong></td><td><strong id="v-ent-tot" class="mono">0.0000</strong></td></tr></tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ SALIDAS VIEW ══════════════════ -->
+<div class="page" id="page-salidas">
+  <div class="alerta a-info" style="margin-bottom:14px"><span class="ai">ℹ️</span><div>Vista de la <strong>Sección III (Campos 28–42)</strong> del libro seleccionado.</div></div>
+  <div class="fbar">
+    <select id="sel-lib-sal" onchange="cargaMov('sal')" style="min-width:300px"><option value="">— Seleccionar Folio de Libro —</option></select>
+  </div>
+  <div class="card">
+    <div class="ch guinda"><div class="sn">III</div><h2>Movimientos de Salida — Campos 28–39</h2></div>
+    <div class="scroll">
+      <table class="rt g" style="min-width:900px">
+        <thead><tr><th><span class="tn">C.30</span>Tipo Doc.</th><th><span class="tn">C.31</span>Fecha Exp.</th><th><span class="tn">C.32</span>Folio</th><th><span class="tn">C.33</span>No. Oficio Aut.*</th><th><span class="tn">C.35</span>Destinatario</th><th><span class="tn">C.36</span>Código ID Dest.</th><th><span class="tn">C.37</span>Tipo Producto</th><th><span class="tn">C.38</span>Vol. Amparado</th></tr></thead>
+        <tbody id="v-sal-tbody"><tr><td colspan="8" style="text-align:center;padding:22px;color:#999">Seleccione un libro de registro</td></tr></tbody>
+        <tfoot><tr><td colspan="7" style="text-align:right"><strong>Campo 39 — Vol. Total Salidas:</strong></td><td><strong id="v-sal-tot" class="mono">0.0000</strong></td></tr></tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ BALANCE ══════════════════ -->
+<div class="page" id="page-balance">
+  <div class="fbar">
+    <select id="sel-lib-bal" onchange="calcBalLibro()" style="min-width:320px"><option value="">— Seleccionar Folio de Libro —</option></select>
+    <button class="btn btn-sm btn-v" onclick="calcBalLibro()">🔄 Recalcular</button>
+    <div class="sp"></div>
+    <button class="btn btn-sm btn-o" onclick="exportarBalPDF()">📄 PDF Balance</button>
+  </div>
+  <div class="card">
+    <div class="ch"><div class="sn">40</div><h2>Balance de Existencias del Período — Campo 40 · Formato Temporal SEMARNAT</h2></div>
+    <div class="cb">
+      <div id="bal-centro-info" style="display:none;background:#f5f2ec;border-radius:8px;padding:13px 17px;margin-bottom:14px;font-size:12.5px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+        <div><div style="font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.5px">Centro</div><div id="bi-nombre" style="font-weight:600">—</div></div>
+        <div><div style="font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.5px">RFC</div><div id="bi-rfc" class="mono" style="font-weight:600">—</div></div>
+        <div><div style="font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.5px">Período</div><div id="bi-periodo" style="font-weight:600">—</div></div>
+        <div><div style="font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.5px">Género</div><div id="bi-genero" style="font-weight:600;font-style:italic">—</div></div>
+      </div>
+      <div class="bal-box">
+        <div class="bal-hd"><span>⚖️ Balance de Existencias del Período</span><span class="bal-ref">Existencia inicial + Vol. entradas – Vol. salidas</span></div>
+        <div class="bal-grid">
+          <div class="bc"><div class="bcl">Existencia Inicial</div><div class="bcv" id="bp-ini">0.0000</div><div class="bcu">Campo 15</div></div>
+          <div class="bc" style="position:relative"><div class="bco" style="background:var(--vl)">+</div><div class="bcl">Vol. Total Entradas</div><div class="bcv" id="bp-ent">0.0000</div><div class="bcu">Campo 26</div></div>
+          <div class="bc" style="position:relative"><div class="bco" style="background:var(--gl)">−</div><div class="bcl">Vol. Total Salidas</div><div class="bcv" id="bp-sal">0.0000</div><div class="bcu">Campo 39</div></div>
+          <div class="bc fin" style="position:relative"><div class="bco" style="background:var(--o);color:var(--v)">=</div><div class="bcl">Balance Final</div><div class="bcv" id="bp-fin">0.0000</div><div class="bcu" id="bp-uni">m³r</div></div>
+        </div>
+        <div class="bal-formula" id="bp-formula">Campo 40: Balance = Existencia inicial + Vol. total entradas − Vol. total salidas</div>
+      </div>
+      <!-- Campo 41 -->
+      <div style="margin-top:14px;background:var(--op);border:1px solid var(--o);border-radius:8px;padding:13px 17px">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--o);margin-bottom:5px"><span class="cn o" style="font-size:9px">41</span> Coeficiente de Transformación</div>
+        <div id="coef-disp" class="mono" style="font-size:18px;font-weight:700;color:var(--v)">— N/A —</div>
+        <div style="font-size:10.5px;color:var(--tl);margin-top:3px">Razón: Vol.Salidas ÷ Vol.Entradas. Solo aplica para Centros de Transformación.</div>
+      </div>
+      <!-- Semáforo -->
+      <div style="margin-top:14px;display:flex;align-items:center;gap:14px;background:#f0ece4;border-radius:8px;padding:13px 17px">
+        <div><div style="font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Estado de Cumplimiento</div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div class="sem" id="sem-bal">
+              <div class="sem-l sem-rojo" id="sem-r"></div>
+              <div class="sem-l sem-am" id="sem-a"></div>
+              <div class="sem-l sem-ver" id="sem-v"></div>
+            </div>
+            <div id="sem-txt" style="font-size:12.5px;font-weight:600;color:var(--tm)">Seleccione un libro</div>
+          </div>
+        </div>
+        <!-- Solo SEMARNAT puede cambiar estado -->
+        <div id="btn-validar-wrap" style="margin-left:auto;display:none">
+          <select id="sel-estado-val" class="btn btn-sm" style="font-size:11px;padding:7px 10px;border:1.5px solid var(--borde);background:white;color:var(--t);cursor:pointer">
+            <option value="">Cambiar estado…</option>
+            <option value="enviado">Enviado</option>
+            <option value="validado">✅ Validado</option>
+            <option value="observado">⚠️ Observado</option>
+            <option value="cancelado">Cancelado</option>
+          </select>
+          <button class="btn btn-v btn-sm" onclick="aplicarEstado()">Aplicar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ EXPEDIENTES ══════════════════ -->
+<div class="page" id="page-expedientes">
+  <div class="fbar">
+    <input type="text" id="fq" placeholder="🔍 Buscar folio, RFC, nombre…" oninput="filtrarExp()" style="min-width:210px">
+    <select id="f-sem" onchange="filtrarExp()"><option value="">Todos semestres</option><option value="1">1er Semestre</option><option value="2">2do Semestre</option></select>
+    <select id="f-anio" onchange="filtrarExp()"><option value="">Todos años</option><option value="2026">2026</option><option value="2025">2025</option><option value="2024">2024</option><option value="2023">2023</option></select>
+    <select id="f-tipo" onchange="filtrarExp()"><option value="">Maderables y No Maderables</option><option value="maderable">🌲 Maderables</option><option value="nomaderable">🌿 No Maderables</option></select>
+    <select id="f-est" onchange="filtrarExp()"><option value="">Todos los estados</option><option value="borrador">Borrador</option><option value="enviado">Enviado</option><option value="validado">Validado</option><option value="observado">Observado</option></select>
+    <div class="sp"></div>
+    <button class="btn btn-sm btn-v" onclick="cargaExp()">🔄 Actualizar</button>
+    <button class="btn btn-sm btn-out" onclick="exportCSV()">📊 CSV</button>
+  </div>
+  <div class="card">
+    <div class="ch"><div class="sn">🗂️</div><h2>Libros de Registro · Expedientes</h2><div style="margin-left:auto;font-size:11px;color:rgba(183,228,199,.7);font-family:'IBM Plex Mono',monospace" id="exp-count">0 registros</div></div>
+    <div class="scroll">
+      <table class="et">
+        <thead><tr><th>Folio</th><th>Nombre / Razón Social</th><th>RFC</th><th>Municipio</th><th>Giro</th><th>Período</th><th>Género</th><th>Tipo</th><th>Vol.Inicial</th><th>Entradas</th><th>Salidas</th><th>Balance</th><th>Unidad</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <tbody id="exp-tbody"><tr><td colspan="15" style="text-align:center;padding:28px;color:#999">Sin registros. Capture el primer libro de registro.</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ MRV ══════════════════ -->
+<div class="page" id="page-mrv">
+  <div style="margin-bottom:18px"><div style="font-family:'Crimson Pro',serif;font-size:22px;font-weight:700;color:var(--pa);margin-bottom:3px">Sistema MRV Forestal</div><div style="font-size:12px;color:rgba(183,228,199,.7)">Medición · Reporte · Verificación — Art. 92 Bis LGDFS · Formato Temporal SEMARNAT</div></div>
+  <div class="mrv-g">
+    <div class="mrv-c mrv-m">
+      <div class="mrv-hd"><div class="mrv-let">M</div><div><h3>Medición</h3><div class="mrv-sub">Volumetría y Existencias</div></div></div>
+      <div class="mrv-bd">
+        <div class="mrv-it"><span>Vol. Total Entradas</span><span class="mrv-val" id="m-ent" style="color:#1a5276">0.0000</span></div>
+        <div class="mrv-it"><span>Vol. Total Salidas</span><span class="mrv-val" id="m-sal" style="color:var(--g)">0.0000</span></div>
+        <div class="mrv-it"><span>Balance Neto Acumulado</span><span class="mrv-val" id="m-bal" style="color:var(--v)">0.0000</span></div>
+        <div class="mrv-it"><span>Libros con datos completos</span><span class="mrv-val" id="m-comp" style="color:#1a5276">0</span></div>
+        <div class="mrv-it"><span>Coef. transformación prom.</span><span class="mrv-val" id="m-coef" style="color:var(--o)">N/A</span></div>
+        <div style="margin-top:10px"><div style="display:flex;justify-content:space-between;font-size:10px;color:#888;margin-bottom:3px"><span>Cobertura de datos</span><span id="m-pct">0%</span></div><div class="prog"><div class="prog-bar pg" id="m-prog" style="width:0%"></div></div></div>
+      </div>
+    </div>
+    <div class="mrv-c mrv-r">
+      <div class="mrv-hd"><div class="mrv-let">R</div><div><h3>Reporte</h3><div class="mrv-sub">Cumplimiento Art. 92 Bis</div></div></div>
+      <div class="mrv-bd">
+        <div class="mrv-it"><span>Total libros capturados</span><span class="mrv-val" id="r-tot" style="color:var(--v)">0</span></div>
+        <div class="mrv-it"><span>Estado: Borrador</span><span class="mrv-val" id="r-bor" style="color:#856404">0</span></div>
+        <div class="mrv-it"><span>Estado: Enviado a SEMARNAT</span><span class="mrv-val" id="r-env" style="color:#1a5276">0</span></div>
+        <div class="mrv-it"><span>Estado: Validado</span><span class="mrv-val" id="r-val" style="color:var(--v)">0</span></div>
+        <div class="mrv-it"><span>Estado: Observado</span><span class="mrv-val" id="r-obs" style="color:var(--g)">0</span></div>
+        <div style="margin-top:10px"><div style="display:flex;justify-content:space-between;font-size:10px;color:#888;margin-bottom:3px"><span>% Validados</span><span id="r-pct">0%</span></div><div class="prog"><div class="prog-bar pg" id="r-prog" style="width:0%"></div></div></div>
+      </div>
+    </div>
+    <div class="mrv-c mrv-v">
+      <div class="mrv-hd"><div class="mrv-let">V</div><div><h3>Verificación</h3><div class="mrv-sub">Alertas y Consistencia</div></div></div>
+      <div class="mrv-bd" id="v-body"><div style="text-align:center;padding:18px;color:#999;font-size:12px">Cargando análisis...</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ch"><div class="sn">📊</div><h2>Análisis MRV por Libro de Registro</h2></div>
+    <div class="scroll">
+      <table class="et" style="font-size:11.5px">
+        <thead><tr><th>Folio</th><th>Centro / Titular</th><th>Período</th><th>Género</th><th>Vol. Entradas</th><th>Vol. Salidas</th><th>Balance</th><th>Coef. Transf.</th><th>Cumplim.</th><th>Estado</th><th>Alerta MRV</th></tr></thead>
+        <tbody id="mrv-tabla"><tr><td colspan="11" style="text-align:center;padding:22px;color:#999">Sin datos</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ CONFIG ══════════════════ -->
+<div class="page" id="page-config">
+  <div class="alerta a-ok"><span class="ai">✅</span><div>Sistema conectado a la base de datos SEMARNAT Durango. Esta versión está preconfigurada para uso de los Centros de Almacenamiento y Transformación Forestal.</div></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+    <div>
+      <div class="cp"><div class="ch2">📋 Información del Sistema</div>
+        <div class="cb2" style="font-size:13px;color:var(--tm);line-height:1.9">
+          <strong>Formato Temporal SEMARNAT</strong><br>
+          Instrumento de captura para el cumplimiento del <strong>Art. 92 Bis LGDFS</strong> (DOF 11-04-2022).<br><br>
+          <strong>Perfil activo:</strong> Responsable de Centro<br>
+          <strong>Entidad:</strong> Durango<br>
+          <strong>Autoridad receptora:</strong> SEMARNAT — Oficina de Representación Durango<br><br>
+          <div class="alerta a-info" style="margin-top:8px"><span class="ai">ℹ️</span><div>Sus datos generales se precargan al buscar su <strong>RFC o Código de Identificación</strong> en la pestaña Formato Temporal.</div></div>
+          <div class="alerta a-warn" style="margin-top:8px"><span class="ai">⚠️</span><div>Plazo de presentación: <strong>primeros 10 días hábiles de julio y enero</strong>.</div></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="cp"><div class="ch2">📞 Contacto SEMARNAT Durango</div>
+        <div class="cb2" style="font-size:13px;color:var(--tm);line-height:1.9">
+          <strong>Oficina de Representación Federal en Durango</strong><br>
+          Gestión Forestal y de Suelos<br><br>
+          <strong>Fundamento legal:</strong> Art. 92 Bis LGDFS (DOF 11-04-2022)<br><br>
+          <strong>Plazos de presentación:</strong><br>
+          • 1er semestre (Ene–Jun): 10 días hábiles de <strong>julio</strong><br>
+          • 2do semestre (Jul–Dic): 10 días hábiles de <strong>enero</strong><br><br>
+          <div class="alerta a-err" style="margin-top:8px"><span class="ai">⚠️</span><div>La omisión de 2 informes consecutivos o información falsa puede resultar en <strong>revocación del aviso de funcionamiento</strong> (Art. 92 Bis LGDFS).</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DETALLE -->
+<div class="mover" id="modal-det">
+  <div class="modal" style="max-width:680px">
+    <div class="mhd"><h3 id="m-titulo">Detalle del Libro</h3><button class="mclose" onclick="cerrarModal()">✕</button></div>
+    <div class="mbody" id="m-cuerpo"></div>
+    <div class="mfoot"><button class="btn btn-sm btn-out" onclick="cerrarModal()">Cerrar</button><button class="btn btn-sm btn-o" onclick="exportarPDF()">📄 PDF</button></div>
+  </div>
+</div>
+<script>
+// ═══════════════════════════════════════════════════
+// ESTADO GLOBAL
+// ═══════════════════════════════════════════════════
+let SB_URL = 'https://eaowougyigscjfxuquwa.supabase.co', SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVhb3dvdWd5aWdzY2pmeHVxdXdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0OTI2NjEsImV4cCI6MjA5MDA2ODY2MX0.4MXNDa9owrqak60m8BBHeRA3j-3bgKJ3npzLIchwy78';
+let dbOK=false, tipoMat='maderable', tipoSal='maderable';
+let folioN=parseInt(localStorage.getItem('folioN')||'0')+1;
+let currentId=null, perfil='centro';
+
+// Datos BD precargados (se llenan desde Supabase o localStorage)
+let centrosBD = JSON.parse(localStorage.getItem('centrosBD')||'[]');
+
+const LS = {
+  libros:   ()=>JSON.parse(localStorage.getItem('libros')||'[]'),
+  entradas: ()=>JSON.parse(localStorage.getItem('entradas')||'[]'),
+  salidas:  ()=>JSON.parse(localStorage.getItem('salidas')||'[]'),
+  save:(k,v)=>localStorage.setItem(k,JSON.stringify(v))
+};
+
+const SQL_SCHEMA = `-- SEMARNAT DURANGO — SISTEMA MRV FORESTAL
+-- Formato Temporal Art. 92 Bis LGDFS
+-- Ejecute en Supabase SQL Editor
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+-- Centros forestales autorizados (precargados desde ID15_SEMARNAT-040v2)
+CREATE TABLE IF NOT EXISTS centros_forestales (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  nombre TEXT NOT NULL,                   -- Campo 1
+  rfc TEXT,                               -- Campo 2
+  nombre_comercial TEXT,                  -- Campo 5
+  giro_comercial TEXT,                    -- Campo 6
+  tipo_centro TEXT,
+  municipio TEXT, localidad TEXT,
+  domicilio TEXT,                         -- Campo 4
+  codigo_postal TEXT,
+  telefono TEXT,                          -- Campo 8
+  correo TEXT,                            -- Campo 7
+  oficio_autorizacion TEXT,               -- Campo 9
+  fecha_oficio_aut DATE,                  -- Campo 10
+  codigo_identificacion TEXT,             -- Campo 11
+  rfn TEXT,                               -- Campo 12
+  capacidad_instalada NUMERIC DEFAULT 0,
+  unidad_capacidad TEXT,
+  activo BOOLEAN DEFAULT TRUE,
+  fuente_datos TEXT DEFAULT 'ID15_SEMARNAT-040v2',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Libros de registro (un libro por semestre, género y tipo)
+CREATE TABLE IF NOT EXISTS libros_registro (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  folio TEXT UNIQUE NOT NULL,
+  centro_id UUID REFERENCES centros_forestales(id),
+  estado_sol TEXT, municipio_sol TEXT, localidad_sol TEXT, fecha_sol DATE,
+  tipo_materia TEXT CHECK (tipo_materia IN ('maderable','nomaderable')),
+  periodo TEXT, semestre SMALLINT, anio SMALLINT,
+  genero TEXT,                            -- Campo 14
+  vol_inicial NUMERIC(14,4) DEFAULT 0,    -- Campo 15
+  unidad TEXT DEFAULT 'm3r',
+  tipo_salida TEXT,
+  vol_entradas_total NUMERIC(14,4) DEFAULT 0,
+  vol_salidas_total NUMERIC(14,4) DEFAULT 0,
+  balance_final NUMERIC(14,4) DEFAULT 0,  -- Campo 40
+  coef_transformacion TEXT,               -- Campo 41
+  observaciones TEXT,
+  firmante_ent TEXT,                      -- Campo 27
+  firmante_sal TEXT,                      -- Campo 42
+  codigo_firma TEXT, hoja_num SMALLINT DEFAULT 1, hoja_total SMALLINT DEFAULT 1,
+  estado TEXT DEFAULT 'borrador'
+    CHECK (estado IN ('borrador','enviado','validado','observado','cancelado')),
+  fecha_presentacion DATE,
+  created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Entradas (Sección II, Campos 16-27)
+CREATE TABLE IF NOT EXISTS entradas_forestales (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  libro_id UUID REFERENCES libros_registro(id) ON DELETE CASCADE,
+  fecha_entrada DATE,                     -- Campo 16
+  tipo_documento TEXT,                    -- Campo 17
+  fecha_expedicion DATE,                  -- Campo 18
+  folio_imprenta TEXT,                    -- Campo 19
+  num_oficio_aut TEXT,                    -- Campo 20
+  fecha_oficio_aut DATE,                  -- Campo 21
+  nombre_proveedor TEXT,                  -- Campo 22
+  codigo_proveedor TEXT,                  -- Campo 23
+  tipo_producto TEXT,                     -- Campo 24
+  volumen NUMERIC(14,4) DEFAULT 0,        -- Campo 25
+  unidad TEXT, orden SMALLINT DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Salidas (Sección III, Campos 30-42)
+CREATE TABLE IF NOT EXISTS salidas_forestales (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  libro_id UUID REFERENCES libros_registro(id) ON DELETE CASCADE,
+  tipo_documento TEXT,                    -- Campo 30
+  fecha_expedicion DATE,                  -- Campo 31
+  folio TEXT,                             -- Campo 32
+  num_oficio_aut_docs TEXT,              -- Campo 33
+  fecha_oficio_aut DATE,                  -- Campo 34
+  destinatario TEXT,                      -- Campo 35
+  codigo_destinatario TEXT,              -- Campo 36
+  tipo_producto TEXT,                     -- Campo 37
+  volumen_amparado NUMERIC(14,4) DEFAULT 0, -- Campo 38
+  unidad TEXT, orden SMALLINT DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Vista Balance de Existencias (Campo 40)
+CREATE OR REPLACE VIEW balance_existencias AS
+SELECT l.id, l.folio, l.semestre, l.anio, l.genero, l.unidad, l.tipo_materia,
+  l.estado, l.vol_inicial,
+  COALESCE(SUM(e.volumen),0) AS vol_entradas,
+  COALESCE(SUM(s.volumen_amparado),0) AS vol_salidas,
+  l.vol_inicial + COALESCE(SUM(e.volumen),0)
+    - COALESCE(SUM(s.volumen_amparado),0) AS balance_final,
+  CASE WHEN COALESCE(SUM(e.volumen),0)>0
+    THEN ROUND(COALESCE(SUM(s.volumen_amparado),0)/COALESCE(SUM(e.volumen),0),4)
+    ELSE NULL END AS coef_transformacion_calc,
+  c.nombre, c.rfc, c.municipio, c.giro_comercial, c.codigo_identificacion
+FROM libros_registro l
+LEFT JOIN centros_forestales c ON c.id = l.centro_id
+LEFT JOIN entradas_forestales e ON e.libro_id = l.id
+LEFT JOIN salidas_forestales s ON s.libro_id = l.id
+GROUP BY l.id, c.id;
+
+-- Trigger: Recalcular balance Campo 40 automáticamente
+CREATE OR REPLACE FUNCTION recalcular_balance() RETURNS TRIGGER LANGUAGE plpgsql AS $$
+DECLARE vid UUID; ve NUMERIC; vs NUMERIC; vi NUMERIC;
+BEGIN
+  IF TG_OP='DELETE' THEN vid:=OLD.libro_id; ELSE vid:=NEW.libro_id; END IF;
+  SELECT COALESCE(SUM(volumen),0) INTO ve FROM entradas_forestales WHERE libro_id=vid;
+  SELECT COALESCE(SUM(volumen_amparado),0) INTO vs FROM salidas_forestales WHERE libro_id=vid;
+  SELECT COALESCE(vol_inicial,0) INTO vi FROM libros_registro WHERE id=vid;
+  UPDATE libros_registro SET vol_entradas_total=ve, vol_salidas_total=vs,
+    balance_final=vi+ve-vs, updated_at=NOW() WHERE id=vid;
+  RETURN COALESCE(NEW, OLD);
+END;$$;
+CREATE TRIGGER tg_bal_ent_i AFTER INSERT ON entradas_forestales FOR EACH ROW EXECUTE FUNCTION recalcular_balance();
+CREATE TRIGGER tg_bal_ent_u AFTER UPDATE ON entradas_forestales FOR EACH ROW EXECUTE FUNCTION recalcular_balance();
+CREATE TRIGGER tg_bal_ent_d AFTER DELETE ON entradas_forestales FOR EACH ROW EXECUTE FUNCTION recalcular_balance();
+CREATE TRIGGER tg_bal_sal_i AFTER INSERT ON salidas_forestales FOR EACH ROW EXECUTE FUNCTION recalcular_balance();
+CREATE TRIGGER tg_bal_sal_u AFTER UPDATE ON salidas_forestales FOR EACH ROW EXECUTE FUNCTION recalcular_balance();
+CREATE TRIGGER tg_bal_sal_d AFTER DELETE ON salidas_forestales FOR EACH ROW EXECUTE FUNCTION recalcular_balance();
+
+-- Índices
+CREATE INDEX IF NOT EXISTS idx_centros_rfc ON centros_forestales(rfc);
+CREATE INDEX IF NOT EXISTS idx_centros_cod ON centros_forestales(codigo_identificacion);
+CREATE INDEX IF NOT EXISTS idx_centros_nom ON centros_forestales USING gin(to_tsvector('spanish', nombre));
+CREATE INDEX IF NOT EXISTS idx_libros_folio ON libros_registro(folio);
+CREATE INDEX IF NOT EXISTS idx_libros_estado ON libros_registro(estado);
+CREATE INDEX IF NOT EXISTS idx_ent_libro ON entradas_forestales(libro_id);
+CREATE INDEX IF NOT EXISTS idx_sal_libro ON salidas_forestales(libro_id);
+
+-- RLS
+ALTER TABLE centros_forestales ENABLE ROW LEVEL SECURITY;
+ALTER TABLE libros_registro ENABLE ROW LEVEL SECURITY;
+ALTER TABLE entradas_forestales ENABLE ROW LEVEL SECURITY;
+ALTER TABLE salidas_forestales ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "pub_centros" ON centros_forestales FOR ALL USING (TRUE);
+CREATE POLICY "pub_libros" ON libros_registro FOR ALL USING (TRUE);
+CREATE POLICY "pub_entradas" ON entradas_forestales FOR ALL USING (TRUE);
+CREATE POLICY "pub_salidas" ON salidas_forestales FOR ALL USING (TRUE);
+
+-- NOTA: Ejecute también el archivo centros_forestales_data.sql
+-- para cargar los 1,668 centros autorizados de Durango.`;
+
+// ═══════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', ()=>{
+  // Credentials pre-configured
+  localStorage.setItem('sb_url',SB_URL);
+  localStorage.setItem('sb_key',SB_KEY);
+  document.getElementById('sql-content').textContent = SQL_SCHEMA;
+  document.getElementById('f_fecha_sol').value = new Date().toISOString().split('T')[0];
+  generarFolio(); initTablas(); updDash(); poblarSels(); checkDB();
+  document.getElementById('f14_gen').addEventListener('input', syncGen);
+  document.getElementById('f13_periodo').addEventListener('change', syncPeriodo);
+  document.getElementById('f15_vi').addEventListener('input', calcTot);
+  cambiarPerfil('centro'); document.getElementById('userSelect').disabled=true;
+  cargarCentrosBD();
+});
+
+// ═══════════════════════════════════════════════════
+// PERFIL DE USUARIO
+// ═══════════════════════════════════════════════════
+function cambiarPerfil(p) {
+  // Versión Centros: solo perfil 'centro' permitido
+  if(p === 'semarnat') { p = 'centro'; toast('Esta versión es para Responsables de Centro','warn'); return; }
+  perfil = p;
+  const esSemarnat = p === 'semarnat';
+  // Tabs solo SEMARNAT
+  document.querySelectorAll('.tab.semarnat-only').forEach(t => {
+    t.style.display = esSemarnat ? '' : 'none';
+  });
+  // Botón validar en balance
+  const bvw = document.getElementById('btn-validar-wrap');
+  if(bvw) bvw.style.display = esSemarnat ? 'flex' : 'none';
+  // Indicador
+  const ind = document.getElementById('userIndicator');
+  const icon = document.getElementById('userIndicatorIcon');
+  const txt = document.getElementById('userIndicatorTxt');
+  if(esSemarnat) {
+    ind.className='user-indicator u-semarnat';
+    icon.textContent='🏛️'; txt.textContent='Oficial SEMARNAT';
+  } else {
+    ind.className='user-indicator u-centro';
+    icon.textContent='👤'; txt.textContent='Responsable de Centro';
+  }
+  toast(esSemarnat ? '🏛️ Perfil: Oficial SEMARNAT — acceso completo' : '👤 Perfil: Responsable de Centro');
+}
+
+// ═══════════════════════════════════════════════════
+// SUPABASE
+// ═══════════════════════════════════════════════════
+async function sbFetch(method, table, body, query='') {
+  if(!SB_URL||!SB_KEY) return null;
+  try {
+    const r = await fetch(`${SB_URL}/rest/v1/${table}${query}`,{
+      method, headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Prefer':method==='POST'?'return=representation':'return=minimal'},
+      body:body?JSON.stringify(body):undefined
+    });
+    const t=await r.text(); return t?JSON.parse(t):[];
+  } catch(e){return null;}
+}
+
+async function checkDB() {
+  const dot=document.getElementById('dbDot'), txt=document.getElementById('dbTxt');
+  if(!SB_URL||!SB_KEY){dot.className='db-dot err';txt.textContent='Sin configurar';return;}
+  dot.className='db-dot warn';txt.textContent='Conectando...';
+  const r=await sbFetch('GET','libros_registro',null,'?limit=1');
+  if(r!==null){dot.className='db-dot';txt.textContent='BD Conectada ✓';dbOK=true;cargarCentrosBD();} 
+  else{dot.className='db-dot err';txt.textContent='Error conexión';}
+}
+
+// ═══════════════════════════════════════════════════
+// CARGAR CENTROS DESDE BD PARA AUTOCOMPLETE
+// ═══════════════════════════════════════════════════
+async function cargarCentrosBD() {
+  // Primero intentar Supabase
+  if(dbOK) {
+    const r = await sbFetch('GET','centros_forestales',null,'?select=id,nombre,rfc,nombre_comercial,giro_comercial,tipo_centro,municipio,localidad,domicilio,codigo_postal,telefono,correo,oficio_autorizacion,fecha_oficio_aut,codigo_identificacion,rfn&activo=eq.true&limit=2000');
+    if(r && r.length>0) {
+      centrosBD = r;
+      LS.save('centrosBD', centrosBD);
+      toast(`✅ ${centrosBD.length} centros cargados desde Supabase`);
+      return;
+    }
+  }
+  // Si no hay Supabase, usar los que tenga en localStorage
+  if(centrosBD.length===0) centrosBD = JSON.parse(localStorage.getItem('centrosBD')||'[]');
+}
+
+// ═══════════════════════════════════════════════════
+// AUTOCOMPLETE BÚSQUEDA DE CENTRO
+// ═══════════════════════════════════════════════════
+let acResults = [];
+
+function buscarCentro(q) {
+  const list = document.getElementById('ac-list');
+  if(!q || q.length < 2) { list.className='ac-list'; return; }
+  const ql = q.toLowerCase();
+  acResults = centrosBD.filter(c =>
+    (c.nombre||'').toLowerCase().includes(ql) ||
+    (c.rfc||'').toLowerCase().includes(ql) ||
+    (c.codigo_identificacion||'').toLowerCase().includes(ql) ||
+    (c.nombre_comercial||'').toLowerCase().includes(ql)
+  ).slice(0,8);
+
+  if(!acResults.length) {
+    list.innerHTML = '<div class="ac-empty">Sin resultados en la base de datos SEMARNAT</div>';
+    list.className='ac-list open'; return;
+  }
+  list.innerHTML = acResults.map((c,i) => `
+    <div class="ac-item" onmousedown="seleccionarCentro(${i})">
+      <div class="ac-main">${esc(c.nombre||'')}</div>
+      <div style="display:flex;gap:10px;margin-top:2px">
+        <span class="ac-rfc">${esc(c.rfc||'—')}</span>
+        <span class="ac-sub">${esc(c.municipio||'')} · ${esc(c.giro_comercial||'')}</span>
+      </div>
+      <div class="ac-sub">${esc(c.codigo_identificacion||'')}</div>
+    </div>`).join('');
+  list.className='ac-list open';
+}
+
+function mostrarAC() { if(document.getElementById('busq-centro').value.length>=2) buscarCentro(document.getElementById('busq-centro').value); }
+function ocultarAC() { document.getElementById('ac-list').className='ac-list'; }
+
+function seleccionarCentro(idx) {
+  const c = acResults[idx];
+  if(!c) return;
+  // Precargar todos los campos de Sección I
+  setV('f1_nombre', c.nombre||'');
+  setV('f2_rfc', c.rfc||'');
+  setV('f3_rep', ''); // No disponible en la BD
+  setV('f4_dom', c.domicilio||'');
+  setV('f5_ncom', c.nombre_comercial||'');
+  const giroSel = document.getElementById('f6_giro');
+  // Try to match giro
+  let matched = false;
+  for(let opt of giroSel.options) {
+    if(opt.text.toLowerCase().includes((c.giro_comercial||'').toLowerCase().substring(0,10))) {
+      giroSel.value=opt.value; matched=true; break;
+    }
+  }
+  if(!matched) giroSel.value='';
+  setV('f7_correo', c.correo||'');
+  setV('f8_tel', c.telefono||'');
+  setV('f9_ofaut', c.oficio_autorizacion||'');
+  if(c.fecha_oficio_aut) setV('f10_fofaut', c.fecha_oficio_aut.substring?c.fecha_oficio_aut.substring(0,10):c.fecha_oficio_aut);
+  setV('f11_cod', c.codigo_identificacion||'');
+  setV('f12_rfn', '');
+  setV('f_mun_sol', c.municipio||'');
+  setV('busq-centro', c.nombre||'');
+  document.getElementById('ac-list').className='ac-list';
+  const pk = document.getElementById('precarga-ok');
+  pk.className='precarga-ok show';
+  document.getElementById('precarga-fuente').textContent = `${c.rfc||'RFC N/A'} · ${c.municipio||''} · ID15_SEMARNAT-040v2`;
+  toast(`✅ Datos precargados: ${c.nombre||''}`);
+}
+
+function limpiarBusqueda() {
+  setV('busq-centro','');
+  document.getElementById('ac-list').className='ac-list';
+  document.getElementById('precarga-ok').className='precarga-ok';
+  ['f1_nombre','f2_rfc','f3_rep','f4_dom','f5_ncom','f7_correo','f8_tel','f9_ofaut','f10_fofaut','f11_cod','f12_rfn'].forEach(id=>setV(id,''));
+  document.getElementById('f6_giro').value='';
+}
+
+function esc(s){ return String(s).replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function setV(id,v){ const el=document.getElementById(id); if(el) el.value=v; }
+function getV(id){ const el=document.getElementById(id); return el?el.value:''; }
+
+// ═══════════════════════════════════════════════════
+// FOLIO
+// ═══════════════════════════════════════════════════
+function generarFolio() {
+  const anio = new Date().getFullYear();
+  const folio = `SEMARNAT-DGO-${anio}-${String(folioN).padStart(3,'0')}`;
+  const el = document.getElementById('folio-display');
+  if(el) el.textContent=folio;
+  return folio;
+}
+
+// ═══════════════════════════════════════════════════
+// NAVEGACIÓN
+// ═══════════════════════════════════════════════════
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('page-'+id).classList.add('on');
+  document.getElementById('tab-'+id).classList.add('on');
+  if(id==='mrv') calcMRV();
+  if(id==='expedientes') cargaExp();
+  if(id==='balance'||id==='entradas'||id==='salidas') poblarSels();
+}
+
+// ═══════════════════════════════════════════════════
+// TIPO MATERIA
+// ═══════════════════════════════════════════════════
+function selTipo(v) {
+  tipoMat=v;
+  document.getElementById('tmo-mad').classList.toggle('on',v==='maderable');
+  document.getElementById('tmo-nom').classList.toggle('on',v==='nomaderable');
+}
+function selTipoSal(v) {
+  tipoSal=v;
+  document.getElementById('tso-mad').classList.toggle('on',v==='maderable');
+  document.getElementById('tso-nom').classList.toggle('on',v==='nomaderable');
+}
+
+// ═══════════════════════════════════════════════════
+// SYNC CAMPOS
+// ═══════════════════════════════════════════════════
+function syncGen() {
+  const g=getV('f14_gen');
+  setV('f29_gen_sal',g);
+}
+function syncPeriodo() {
+  const v=getV('f13_periodo');
+  if(!v) return;
+  const [sem,anio]=v.split('_');
+  const lbl=sem==='1'?`Primer Semestre ${anio} (Enero–Junio ${anio})`:`Segundo Semestre ${anio} (Julio–Diciembre ${anio})`;
+  setV('f28_per_sal',lbl);
+  const pd=document.getElementById('periodo-display');
+  if(pd) pd.textContent=lbl;
+  const ad=document.getElementById('anio-display');
+  if(ad) ad.textContent=anio;
+  calcTot();
+}
+function updPeriodo(){ syncPeriodo(); }
+
+// ═══════════════════════════════════════════════════
+// FILAS ENTRADAS / SALIDAS
+// ═══════════════════════════════════════════════════
+function initTablas() {
+  for(let i=0;i<5;i++) addEnt();
+  for(let i=0;i<5;i++) addSal();
+}
+function addEnt() {
+  const tb=document.getElementById('ent-tbody');
+  const n=tb.rows.length+1, tr=tb.insertRow();
+  tr.innerHTML=`<td class="rn">${n}</td>
+    <td><input type="date" class="ent-fe"></td>
+    <td><select class="ent-td"><option value="">—</option><option>Remisión</option><option>Reembarque</option><option>Factura</option><option>Pedimento aduanal</option></select></td>
+    <td><input type="date" class="ent-fex"></td>
+    <td><input type="text" class="ent-foi" placeholder="Folio"></td>
+    <td><input type="text" class="ent-ofa" placeholder="No. oficio / N/A"></td>
+    <td><input type="date" class="ent-foa"></td>
+    <td><input type="text" class="ent-prov" placeholder="Nombre proveedor" style="min-width:110px"></td>
+    <td><input type="text" class="ent-cprov" placeholder="Código ID" style="font-family:'IBM Plex Mono',monospace;min-width:85px"></td>
+    <td><input type="text" class="ent-prod" placeholder="Tipo producto" style="min-width:100px"></td>
+    <td><input type="number" class="ent-vol nf" step="0.0001" min="0" placeholder="0.0000" oninput="calcTot()"></td>
+    <td><button class="bdel" onclick="this.closest('tr').remove();calcTot()" title="Eliminar">🗑</button></td>`;
+}
+function addSal() {
+  const tb=document.getElementById('sal-tbody');
+  const n=tb.rows.length+1, tr=tb.insertRow();
+  tr.innerHTML=`<td class="rn">${n}</td>
+    <td><select class="sal-td"><option value="">—</option><option>Reembarque</option><option>Factura</option></select></td>
+    <td><input type="date" class="sal-fex"></td>
+    <td><input type="text" class="sal-foi" placeholder="Folio"></td>
+    <td><input type="text" class="sal-ofa" placeholder="No. oficio / N/A"></td>
+    <td><input type="date" class="sal-foa"></td>
+    <td><input type="text" class="sal-dest" placeholder="Nombre destinatario" style="min-width:110px"></td>
+    <td><input type="text" class="sal-cdest" placeholder="Código ID / N/A" style="font-family:'IBM Plex Mono',monospace;min-width:85px"></td>
+    <td><input type="text" class="sal-prod" placeholder="Tipo producto" style="min-width:100px"></td>
+    <td><input type="number" class="sal-vol nf" step="0.0001" min="0" placeholder="0.0000" oninput="calcTot()"></td>
+    <td><button class="bdel" onclick="this.closest('tr').remove();calcTot()" title="Eliminar">🗑</button></td>`;
+}
+
+// ═══════════════════════════════════════════════════
+// CÁLCULO TOTALES Y BALANCE
+// ═══════════════════════════════════════════════════
+function calcTot() {
+  let te=0, ts=0;
+  document.querySelectorAll('.ent-vol').forEach(i=>te+=parseFloat(i.value)||0);
+  document.querySelectorAll('.sal-vol').forEach(i=>ts+=parseFloat(i.value)||0);
+  setEl('ent-tot',te.toFixed(4)); setEl('sal-tot',ts.toFixed(4));
+  updBalance(te,ts);
+}
+function updBalance(te,ts) {
+  const vi=parseFloat(getV('f15_vi'))||0;
+  const bal=vi+te-ts;
+  const uni=getV('f15_uni')||'m³r';
+  setEl('b40-ini',vi.toFixed(4)); setEl('b40-ent',te.toFixed(4));
+  setEl('b40-sal',ts.toFixed(4)); setEl('b40-fin',bal.toFixed(4));
+  setEl('b40-uni',uni);
+  setEl('b40-formula',`Balance = ${vi.toFixed(4)} + ${te.toFixed(4)} − ${ts.toFixed(4)} = ${bal.toFixed(4)} ${uni}`);
+  if(te>0) { const c=(ts/te).toFixed(4); if(!getV('f41_coef')) setV('f41_coef',c); }
+}
+function setEl(id,v){ const el=document.getElementById(id); if(el) el.textContent=v; }
+
+// ═══════════════════════════════════════════════════
+// GUARDAR FORMATO
+// ═══════════════════════════════════════════════════
+async function guardarFormato() {
+  if(!getV('f1_nombre').trim()){toast('Ingrese el nombre del titular (Campo 1)','err');return;}
+  if(!getV('f13_periodo')){toast('Seleccione el período (Campo 13)','err');return;}
+  const folio=document.getElementById('folio-display').textContent;
+  const [sem,anio]=(getV('f13_periodo')||'1_2024').split('_');
+  const ents=leerEntradas(), sals=leerSalidas();
+  const te=ents.reduce((s,e)=>s+e.volumen,0), ts=sals.reduce((s,e)=>s+e.volumen_amparado,0);
+  const vi=parseFloat(getV('f15_vi'))||0;
+  const libro={
+    id:Date.now().toString(), folio,
+    nombre:getV('f1_nombre'), rfc:getV('f2_rfc'), rep_legal:getV('f3_rep'),
+    domicilio:getV('f4_dom'), nombre_comercial:getV('f5_ncom'),
+    giro:getV('f6_giro'), correo:getV('f7_correo'), telefono:getV('f8_tel'),
+    oficio_aut:getV('f9_ofaut'), fecha_oficio_aut:getV('f10_fofaut'),
+    codigo_id:getV('f11_cod'), rfn:getV('f12_rfn'),
+    municipio_sol:getV('f_mun_sol'), localidad_sol:getV('f_loc_sol'),
+    fecha_sol:getV('f_fecha_sol'),
+    tipo_materia:tipoMat, periodo:getV('f13_periodo'),
+    semestre:parseInt(sem), anio:parseInt(anio),
+    genero:getV('f14_gen'), vol_inicial:vi, unidad:getV('f15_uni'),
+    tipo_salida:tipoSal, vol_entradas:te, vol_salidas:ts,
+    balance:vi+te-ts, coef_transf:getV('f41_coef'),
+    observaciones:getV('f_obs'),
+    firmante_ent:getV('f27_firma_ent'), firmante_sal:getV('f42_firma_sal'),
+    codigo_firma:getV('f_cod_firma'), hoja_num:getV('f_hoja_n'), hoja_total:getV('f_hoja_t'),
+    estado:'borrador', fecha:new Date().toISOString(), entradas:ents, salidas:sals
+  };
+  // Guardar local
+  const libros=LS.libros(); libros.push(libro); LS.save('libros',libros);
+  const ea=LS.entradas(); ea.push(...ents.map(e=>({...e,libro_id:libro.id}))); LS.save('entradas',ea);
+  const sa=LS.salidas(); sa.push(...sals.map(s=>({...s,libro_id:libro.id}))); LS.save('salidas',sa);
+  // Supabase
+  if(dbOK) {
+    const centro = await sbFetch('POST','centros_forestales',{
+      nombre:libro.nombre,rfc:libro.rfc,nombre_comercial:libro.nombre_comercial,
+      giro_comercial:libro.giro,domicilio:libro.domicilio,
+      municipio:libro.municipio_sol,telefono:libro.telefono,correo:libro.correo,
+      oficio_autorizacion:libro.oficio_aut,
+      codigo_identificacion:libro.codigo_id,rfn:libro.rfn,activo:true
+    });
+    if(centro?.[0]) {
+      const lib=await sbFetch('POST','libros_registro',{
+        folio:libro.folio,centro_id:centro[0].id,
+        estado_sol:'Durango',municipio_sol:libro.municipio_sol,
+        fecha_sol:libro.fecha_sol||null,
+        tipo_materia:libro.tipo_materia,periodo:libro.periodo,
+        semestre:libro.semestre,anio:libro.anio,
+        genero:libro.genero,vol_inicial:vi,unidad:libro.unidad,
+        observaciones:libro.observaciones,estado:'borrador',
+        firmante_ent:libro.firmante_ent,firmante_sal:libro.firmante_sal
+      });
+      if(lib?.[0]) {
+        for(const e of ents) await sbFetch('POST','entradas_forestales',{libro_id:lib[0].id,...e,fecha_entrada:e.fecha_entrada||null,fecha_expedicion:e.fecha_expedicion||null,fecha_oficio_aut:e.fecha_oficio_aut||null});
+        for(const s of sals) await sbFetch('POST','salidas_forestales',{libro_id:lib[0].id,...s,fecha_expedicion:s.fecha_expedicion||null,fecha_oficio_aut:s.fecha_oficio_aut||null});
+        toast('✅ Guardado en Supabase');
+      }
+    }
+  }
+  currentId=libro.id; folioN++; localStorage.setItem('folioN',folioN);
+  updDash(); poblarSels();
+  document.getElementById('folio-est-badge').innerHTML='<span class="dot"></span> Borrador';
+  toast(`📋 Folio ${folio} guardado`);
+  document.getElementById('badge-exp').textContent=LS.libros().length;
+}
+
+function leerEntradas() {
+  const r=[];
+  document.querySelectorAll('#ent-tbody tr').forEach((tr,i)=>{
+    const v=parseFloat(tr.querySelector('.ent-vol')?.value)||0;
+    if(v>0||tr.querySelector('.ent-prov')?.value)
+      r.push({orden:i,fecha_entrada:tr.querySelector('.ent-fe')?.value||'',tipo_documento:tr.querySelector('.ent-td')?.value||'',fecha_expedicion:tr.querySelector('.ent-fex')?.value||'',folio_imprenta:tr.querySelector('.ent-foi')?.value||'',num_oficio_aut:tr.querySelector('.ent-ofa')?.value||'',fecha_oficio_aut:tr.querySelector('.ent-foa')?.value||'',nombre_proveedor:tr.querySelector('.ent-prov')?.value||'',codigo_proveedor:tr.querySelector('.ent-cprov')?.value||'',tipo_producto:tr.querySelector('.ent-prod')?.value||'',volumen:v});
+  }); return r;
+}
+function leerSalidas() {
+  const r=[];
+  document.querySelectorAll('#sal-tbody tr').forEach((tr,i)=>{
+    const v=parseFloat(tr.querySelector('.sal-vol')?.value)||0;
+    if(v>0||tr.querySelector('.sal-dest')?.value)
+      r.push({orden:i,tipo_documento:tr.querySelector('.sal-td')?.value||'',fecha_expedicion:tr.querySelector('.sal-fex')?.value||'',folio:tr.querySelector('.sal-foi')?.value||'',num_oficio_aut_docs:tr.querySelector('.sal-ofa')?.value||'',fecha_oficio_aut:tr.querySelector('.sal-foa')?.value||'',destinatario:tr.querySelector('.sal-dest')?.value||'',codigo_destinatario:tr.querySelector('.sal-cdest')?.value||'',tipo_producto:tr.querySelector('.sal-prod')?.value||'',volumen_amparado:v});
+  }); return r;
+}
+
+// ═══════════════════════════════════════════════════
+// LIMPIAR
+// ═══════════════════════════════════════════════════
+function limpiarFormato() {
+  if(!confirm('¿Limpiar para un nuevo registro?')) return;
+  document.querySelectorAll('#page-formato input:not([readonly]),#page-formato select,#page-formato textarea').forEach(el=>{
+    if(el.type==='number') el.value='0'; else if(el.type!=='radio') el.value='';
+  });
+  document.getElementById('f_est').value='Durango';
+  document.getElementById('f_fecha_sol').value=new Date().toISOString().split('T')[0];
+  document.getElementById('ent-tbody').innerHTML=''; document.getElementById('sal-tbody').innerHTML='';
+  for(let i=0;i<5;i++){addEnt();addSal();}
+  calcTot(); selTipo('maderable'); selTipoSal('maderable');
+  document.getElementById('precarga-ok').className='precarga-ok';
+  folioN++; localStorage.setItem('folioN',folioN); generarFolio();
+  document.getElementById('folio-est-badge').innerHTML='<span class="dot"></span> Borrador';
+  setEl('periodo-display','— Sin definir —'); setEl('anio-display','2024');
+  toast('🗑️ Formulario limpiado');
+}
+
+// ═══════════════════════════════════════════════════
+// SELECTORES
+// ═══════════════════════════════════════════════════
+function poblarSels() {
+  const libros=LS.libros();
+  const opt='<option value="">— Seleccionar Folio —</option>'+libros.map(l=>`<option value="${l.id}">${l.folio} — ${(l.nombre||'').substring(0,30)}</option>`).join('');
+  ['sel-lib-ent','sel-lib-sal','sel-lib-bal'].forEach(id=>{const el=document.getElementById(id);if(el) el.innerHTML=opt;});
+}
+
+// ═══════════════════════════════════════════════════
+// VISTAS ENTRADAS / SALIDAS
+// ═══════════════════════════════════════════════════
+function cargaMov(tipo) {
+  const id=tipo==='ent'?getV('sel-lib-ent'):getV('sel-lib-sal');
+  if(!id) return;
+  if(tipo==='ent') {
+    const ents=LS.entradas().filter(e=>e.libro_id===id);
+    const tb=document.getElementById('v-ent-tbody');
+    if(!ents.length){tb.innerHTML='<tr><td colspan="9" style="text-align:center;padding:20px;color:#999">Sin movimientos de entrada</td></tr>';return;}
+    tb.innerHTML=ents.map(e=>`<tr><td>${e.fecha_entrada||'—'}</td><td>${e.tipo_documento||'—'}</td><td>${e.fecha_expedicion||'—'}</td><td class="mono">${e.folio_imprenta||'—'}</td><td class="mono">${e.num_oficio_aut||'—'}</td><td>${e.nombre_proveedor||'—'}</td><td class="mono">${e.codigo_proveedor||'—'}</td><td>${e.tipo_producto||'—'}</td><td class="mono" style="text-align:right;font-weight:600">${(e.volumen||0).toFixed(4)}</td></tr>`).join('');
+    setEl('v-ent-tot',ents.reduce((s,e)=>s+(e.volumen||0),0).toFixed(4));
+  } else {
+    const sals=LS.salidas().filter(s=>s.libro_id===id);
+    const tb=document.getElementById('v-sal-tbody');
+    if(!sals.length){tb.innerHTML='<tr><td colspan="8" style="text-align:center;padding:20px;color:#999">Sin movimientos de salida</td></tr>';return;}
+    tb.innerHTML=sals.map(s=>`<tr><td>${s.tipo_documento||'—'}</td><td>${s.fecha_expedicion||'—'}</td><td class="mono">${s.folio||'—'}</td><td class="mono">${s.num_oficio_aut_docs||'—'}</td><td>${s.destinatario||'—'}</td><td class="mono">${s.codigo_destinatario||'—'}</td><td>${s.tipo_producto||'—'}</td><td class="mono" style="text-align:right;font-weight:600">${(s.volumen_amparado||0).toFixed(4)}</td></tr>`).join('');
+    setEl('v-sal-tot',sals.reduce((s,e)=>s+(e.volumen_amparado||0),0).toFixed(4));
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// BALANCE POR LIBRO
+// ═══════════════════════════════════════════════════
+function calcBalLibro() {
+  const id=getV('sel-lib-bal');
+  if(!id) return;
+  const lib=LS.libros().find(l=>l.id===id);
+  if(!lib) return;
+  const ents=LS.entradas().filter(e=>e.libro_id===id);
+  const sals=LS.salidas().filter(s=>s.libro_id===id);
+  const te=ents.reduce((s,e)=>s+(e.volumen||0),0);
+  const ts=sals.reduce((s,e)=>s+(e.volumen_amparado||0),0);
+  const vi=lib.vol_inicial||0, bal=vi+te-ts, uni=lib.unidad||'m³r';
+  setEl('bp-ini',vi.toFixed(4)); setEl('bp-ent',te.toFixed(4));
+  setEl('bp-sal',ts.toFixed(4)); setEl('bp-fin',bal.toFixed(4));
+  setEl('bp-uni',uni);
+  setEl('bp-formula',`Campo 40: ${vi.toFixed(4)} + ${te.toFixed(4)} − ${ts.toFixed(4)} = ${bal.toFixed(4)} ${uni}`);
+  const coef=te>0?(ts/te).toFixed(4):null;
+  setEl('coef-disp',coef?`${coef} (${ts.toFixed(2)} ÷ ${te.toFixed(2)})`:' N/A');
+  // Info centro
+  const ci=document.getElementById('bal-centro-info');
+  ci.style.display='grid';
+  setEl('bi-nombre',lib.nombre||'—'); setEl('bi-rfc',lib.rfc||'—');
+  setEl('bi-periodo',lib.semestre===1?`1er Sem. ${lib.anio}`:`2do Sem. ${lib.anio}`);
+  setEl('bi-genero',lib.genero||'—');
+  // Semáforo
+  let sem='ver',txt='Balance consistente ✓';
+  if(bal<0){sem='rojo';txt='⚠️ Balance negativo — verificar registros';}
+  else if(!ents.length){sem='am';txt='Sin entradas registradas';}
+  else if(!sals.length){sem='am';txt='Sin salidas registradas';}
+  else if(lib.estado==='borrador'){sem='am';txt='Borrador — pendiente de presentación';}
+  else if(lib.estado==='validado'){sem='ver';txt='✓ Validado por SEMARNAT';}
+  ['sem-r','sem-a','sem-v'].forEach(id=>document.getElementById(id).classList.remove('on'));
+  document.getElementById('sem-'+(sem==='rojo'?'r':sem==='am'?'a':'v')).classList.add('on');
+  setEl('sem-txt',txt);
+}
+
+function aplicarEstado() {
+  if(perfil!=='semarnat'){toast('Solo el Oficial SEMARNAT puede cambiar el estado','err');return;}
+  const id=getV('sel-lib-bal'), nv=getV('sel-estado-val');
+  if(!id||!nv) return;
+  const libros=LS.libros().map(l=>l.id===id?{...l,estado:nv}:l);
+  LS.save('libros',libros);
+  calcBalLibro(); updDash(); toast(`Estado actualizado: ${nv}`);
+}
+
+// ═══════════════════════════════════════════════════
+// EXPEDIENTES
+// ═══════════════════════════════════════════════════
+function cargaExp() { renderExp(LS.libros()); }
+
+function renderExp(libros) {
+  const tb=document.getElementById('exp-tbody');
+  setEl('exp-count',`${libros.length} registros`);
+  document.getElementById('badge-exp').textContent=libros.length;
+  if(!libros.length){tb.innerHTML='<tr><td colspan="15" style="text-align:center;padding:26px;color:#999">Sin libros de registro.</td></tr>';return;}
+  const bm={borrador:'bw',enviado:'bi',validado:'bv',observado:'br',cancelado:'bg'};
+  tb.innerHTML=libros.map(l=>{
+    const ents=LS.entradas().filter(e=>e.libro_id===l.id);
+    const sals=LS.salidas().filter(s=>s.libro_id===l.id);
+    const te=ents.reduce((s,e)=>s+(e.volumen||0),0);
+    const ts=sals.reduce((s,e)=>s+(e.volumen_amparado||0),0);
+    const bal=(l.vol_inicial||0)+te-ts;
+    const per=l.semestre===1?`1er S.${l.anio}`:`2do S.${l.anio}`;
+    return `<tr>
+      <td class="mono" style="font-size:11px;font-weight:600;color:var(--v)">${l.folio}</td>
+      <td style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(l.nombre||'')}">${esc(l.nombre||'—')}</td>
+      <td class="mono" style="font-size:11px">${l.rfc||'—'}</td>
+      <td>${l.municipio_sol||'—'}</td>
+      <td style="font-size:11px">${l.giro||'—'}</td>
+      <td style="white-space:nowrap">${per}</td>
+      <td style="font-style:italic">${l.genero||'—'}</td>
+      <td>${l.tipo_materia==='maderable'?'🌲':'🌿'} ${l.tipo_materia==='maderable'?'Mad.':'No Mad.'}</td>
+      <td class="mono" style="text-align:right">${(l.vol_inicial||0).toFixed(2)}</td>
+      <td class="mono" style="text-align:right;color:var(--v)">${te.toFixed(2)}</td>
+      <td class="mono" style="text-align:right;color:var(--g)">${ts.toFixed(2)}</td>
+      <td class="mono" style="text-align:right;font-weight:700;color:${bal<0?'#c0392b':'var(--v)'}">${bal.toFixed(2)}</td>
+      <td class="mono" style="font-size:11px">${l.unidad||'—'}</td>
+      <td><span class="badge ${bm[l.estado]||'bg'}"><span class="dot"></span>${l.estado}</span></td>
+      <td><div style="display:flex;gap:3px">
+        <button class="bico" onclick="verDet('${l.id}')" title="Ver detalle">👁️</button>
+        ${perfil==='semarnat'?`<button class="bico" onclick="cambEst('${l.id}')" title="Cambiar estado">✏️</button>`:''}
+        <button class="bico" onclick="elimLibro('${l.id}')" title="Eliminar">🗑️</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+function filtrarExp() {
+  const q=getV('fq').toLowerCase(), sem=getV('f-sem'), anio=getV('f-anio'), tipo=getV('f-tipo'), est=getV('f-est');
+  let lib=LS.libros();
+  if(q) lib=lib.filter(l=>JSON.stringify(l).toLowerCase().includes(q));
+  if(sem) lib=lib.filter(l=>String(l.semestre)===sem);
+  if(anio) lib=lib.filter(l=>String(l.anio)===anio);
+  if(tipo) lib=lib.filter(l=>l.tipo_materia===tipo);
+  if(est) lib=lib.filter(l=>l.estado===est);
+  renderExp(lib);
+}
+
+function verDet(id) {
+  const l=LS.libros().find(x=>x.id===id); if(!l) return;
+  const ents=LS.entradas().filter(e=>e.libro_id===id);
+  const sals=LS.salidas().filter(s=>s.libro_id===id);
+  const te=ents.reduce((s,e)=>s+(e.volumen||0),0);
+  const ts=sals.reduce((s,e)=>s+(e.volumen_amparado||0),0);
+  const bal=(l.vol_inicial||0)+te-ts;
+  setEl('m-titulo',`Libro ${l.folio}`);
+  document.getElementById('m-cuerpo').innerHTML=`
+    <div style="font-size:12.5px;line-height:1.8">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px 18px;margin-bottom:12px;background:#f5f2ec;padding:12px;border-radius:6px">
+        <div><span style="font-size:10px;color:#888;display:block;text-transform:uppercase">Titular</span><strong>${esc(l.nombre||'—')}</strong></div>
+        <div><span style="font-size:10px;color:#888;display:block;text-transform:uppercase">RFC</span><code>${esc(l.rfc||'—')}</code></div>
+        <div><span style="font-size:10px;color:#888;display:block;text-transform:uppercase">Giro</span>${esc(l.giro||'—')}</div>
+        <div><span style="font-size:10px;color:#888;display:block;text-transform:uppercase">Género</span><em>${esc(l.genero||'—')}</em></div>
+        <div><span style="font-size:10px;color:#888;display:block;text-transform:uppercase">Período</span>${l.semestre===1?'1er':'2do'} Semestre ${l.anio}</div>
+        <div><span style="font-size:10px;color:#888;display:block;text-transform:uppercase">Tipo</span>${l.tipo_materia==='maderable'?'🌲 Maderables':'🌿 No Maderables'}</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:#e8f5e9;padding:12px;border-radius:6px">
+        <div style="text-align:center"><div style="font-size:9.5px;color:#888">INICIAL</div><div style="font-size:20px;font-weight:700;font-family:'IBM Plex Mono',monospace;color:var(--v)">${(l.vol_inicial||0).toFixed(2)}</div></div>
+        <div style="text-align:center"><div style="font-size:9.5px;color:#888">+ENTRADAS</div><div style="font-size:20px;font-weight:700;font-family:'IBM Plex Mono',monospace;color:#1a5276">${te.toFixed(2)}</div></div>
+        <div style="text-align:center"><div style="font-size:9.5px;color:#888">−SALIDAS</div><div style="font-size:20px;font-weight:700;font-family:'IBM Plex Mono',monospace;color:var(--g)">${ts.toFixed(2)}</div></div>
+        <div style="text-align:center;background:var(--v);border-radius:6px"><div style="font-size:9.5px;color:rgba(183,228,199,.8)">BALANCE</div><div style="font-size:20px;font-weight:700;font-family:'IBM Plex Mono',monospace;color:var(--ol)">${bal.toFixed(2)}</div></div>
+      </div>
+      <div style="font-size:10.5px;color:#999;margin-top:9px">Folio: ${l.folio} · Estado: ${l.estado} · Movimientos: ${ents.length} entradas, ${sals.length} salidas · Unidad: ${l.unidad||'m³r'}</div>
+    </div>`;
+  document.getElementById('modal-det').classList.add('open');
+}
+
+function cambEst(id) {
+  if(perfil!=='semarnat'){toast('Solo el Oficial SEMARNAT puede cambiar el estado','err');return;}
+  const estados=['borrador','enviado','validado','observado','cancelado'];
+  const lib=LS.libros().find(l=>l.id===id);if(!lib) return;
+  const nv=prompt(`Estado actual: "${lib.estado}"\n\nNuevo estado (${estados.join(', ')}):`);
+  if(nv&&estados.includes(nv.toLowerCase())){
+    const libros=LS.libros().map(l=>l.id===id?{...l,estado:nv.toLowerCase()}:l);
+    LS.save('libros',libros); cargaExp(); updDash(); toast('Estado actualizado: '+nv);
+  }
+}
+
+function elimLibro(id) {
+  if(!confirm('¿Eliminar este libro y todos sus movimientos?')) return;
+  LS.save('libros',LS.libros().filter(l=>l.id!==id));
+  LS.save('entradas',LS.entradas().filter(e=>e.libro_id!==id));
+  LS.save('salidas',LS.salidas().filter(s=>s.libro_id!==id));
+  cargaExp(); updDash(); toast('Libro eliminado','warn');
+}
+function cerrarModal(){ document.getElementById('modal-det').classList.remove('open'); }
+
+// ═══════════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════════
+function updDash() {
+  const libros=LS.libros(), ents=LS.entradas(), sals=LS.salidas();
+  const te=ents.reduce((s,e)=>s+(e.volumen||0),0);
+  const ts=sals.reduce((s,e)=>s+(e.volumen_amparado||0),0);
+  const vi=libros.reduce((s,l)=>s+(l.vol_inicial||0),0);
+  setEl('kpi-centros',[...new Set(libros.map(l=>l.rfc||l.nombre).filter(Boolean))].length||libros.length);
+  setEl('kpi-informes',libros.length);
+  setEl('kpi-vol',Math.round(te));
+  setEl('kpi-balance',Math.round(vi+te-ts));
+  setEl('kpi-pend',libros.filter(l=>l.estado==='borrador').length);
+  const tb=document.getElementById('dash-tabla');
+  if(!libros.length){tb.innerHTML='<tr><td colspan="5" style="text-align:center;padding:22px;color:#999">Sin registros. <a href="#" onclick="showPage(\'formato\')" style="color:var(--v)">Crear el primero →</a></td></tr>';return;}
+  const bm={borrador:'bw',enviado:'bi',validado:'bv',observado:'br'};
+  tb.innerHTML=[...libros].reverse().slice(0,6).map(l=>{
+    const per=l.semestre===1?`1er S.${l.anio}`:`2do S.${l.anio}`;
+    return `<tr><td class="mono" style="font-size:11px;font-weight:600;color:var(--v)">${l.folio}</td><td style="font-size:11.5px;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(l.nombre||'—')}</td><td style="white-space:nowrap">${per}</td><td style="font-style:italic">${esc(l.genero||'—')}</td><td><span class="badge ${bm[l.estado]||'bg'}"><span class="dot"></span>${l.estado}</span></td></tr>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════
+// MRV
+// ═══════════════════════════════════════════════════
+function calcMRV() {
+  const libros=LS.libros(), ents=LS.entradas(), sals=LS.salidas();
+  const te=ents.reduce((s,e)=>s+(e.volumen||0),0);
+  const ts=sals.reduce((s,e)=>s+(e.volumen_amparado||0),0);
+  const vi=libros.reduce((s,l)=>s+(l.vol_inicial||0),0);
+  const comp=libros.filter(l=>ents.filter(e=>e.libro_id===l.id).length>0).length;
+  setEl('m-ent',te.toFixed(4)); setEl('m-sal',ts.toFixed(4));
+  setEl('m-bal',(vi+te-ts).toFixed(4)); setEl('m-comp',comp);
+  setEl('m-coef',te>0?(ts/te).toFixed(4):'N/A');
+  const cp=libros.length?Math.round(comp/libros.length*100):0;
+  setEl('m-pct',cp+'%'); document.getElementById('m-prog').style.width=cp+'%';
+  const rt=libros.length, rb=libros.filter(l=>l.estado==='borrador').length;
+  const re=libros.filter(l=>l.estado==='enviado').length;
+  const rv=libros.filter(l=>l.estado==='validado').length;
+  const ro=libros.filter(l=>l.estado==='observado').length;
+  setEl('r-tot',rt); setEl('r-bor',rb); setEl('r-env',re); setEl('r-val',rv); setEl('r-obs',ro);
+  const rp=rt?Math.round(rv/rt*100):0;
+  setEl('r-pct',rp+'%'); const rpr=document.getElementById('r-prog');
+  rpr.style.width=rp+'%'; rpr.className=`prog-bar ${rp>=80?'pg':rp>=40?'po':'pr'}`;
+  // Verificación
+  const alertas=[];
+  libros.forEach(l=>{
+    const le=ents.filter(e=>e.libro_id===l.id);
+    const ls=sals.filter(s=>s.libro_id===l.id);
+    const lte=le.reduce((s,e)=>s+(e.volumen||0),0);
+    const lts=ls.reduce((s,e)=>s+(e.volumen_amparado||0),0);
+    const lbal=(l.vol_inicial||0)+lte-lts;
+    if(lbal<0) alertas.push({t:'err',m:`${l.folio}: Balance negativo (${lbal.toFixed(2)}) ⚠️`});
+    if(!le.length) alertas.push({t:'warn',m:`${l.folio}: Sin movimientos de entrada (Sección II)`});
+    if(le.length&&!ls.length) alertas.push({t:'warn',m:`${l.folio}: Sin movimientos de salida (Sección III)`});
+    if(l.estado==='borrador') alertas.push({t:'info',m:`${l.folio}: Pendiente de presentación a SEMARNAT`});
+  });
+  const vb=document.getElementById('v-body');
+  if(!alertas.length){vb.innerHTML='<div class="alerta a-ok"><span class="ai">✅</span><div>Sin alertas. Todos los libros son consistentes.</div></div>';return;}
+  vb.innerHTML=alertas.slice(0,7).map(a=>{
+    const cls=a.t==='err'?'a-err':a.t==='warn'?'a-warn':'a-info';
+    const ico=a.t==='err'?'🚨':a.t==='warn'?'⚠️':'ℹ️';
+    return `<div class="alerta ${cls}" style="margin-bottom:6px"><span class="ai">${ico}</span><div>${esc(a.m)}</div></div>`;
+  }).join('')+(alertas.length>7?`<div style="font-size:11px;color:var(--tl);text-align:center;margin-top:5px">+ ${alertas.length-7} alertas más</div>`:'');
+  // Tabla MRV
+  const mt=document.getElementById('mrv-tabla');
+  if(!libros.length){mt.innerHTML='<tr><td colspan="11" style="text-align:center;padding:20px;color:#999">Sin datos</td></tr>';return;}
+  const bm={borrador:'bw',enviado:'bi',validado:'bv',observado:'br'};
+  mt.innerHTML=libros.map(l=>{
+    const le=ents.filter(e=>e.libro_id===l.id);
+    const ls=sals.filter(s=>s.libro_id===l.id);
+    const lte=le.reduce((s,e)=>s+(e.volumen||0),0);
+    const lts=ls.reduce((s,e)=>s+(e.volumen_amparado||0),0);
+    const lbal=(l.vol_inicial||0)+lte-lts;
+    const lcoef=lte>0?(lts/lte).toFixed(4):'—';
+    const cum=l.estado==='validado'?'✅':l.estado==='enviado'?'📤':'⏳';
+    const aler=lbal<0?'🚨 Balance neg.':!le.length?'⚠️ Sin entradas':!ls.length?'⚠️ Sin salidas':'✅ OK';
+    const ac=lbal<0?'color:var(--g)':!le.length||!ls.length?'color:#856404':'color:var(--v)';
+    return `<tr>
+      <td class="mono" style="font-size:11px;font-weight:600;color:var(--v)">${l.folio}</td>
+      <td style="font-size:11px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(l.nombre||'—')}</td>
+      <td style="font-size:11px;white-space:nowrap">${l.semestre===1?'1er':'2do'} S.${l.anio}</td>
+      <td style="font-style:italic">${esc(l.genero||'—')}</td>
+      <td class="mono" style="text-align:right;color:var(--v)">${lte.toFixed(2)}</td>
+      <td class="mono" style="text-align:right;color:var(--g)">${lts.toFixed(2)}</td>
+      <td class="mono" style="text-align:right;font-weight:700;color:${lbal<0?'#c0392b':'var(--v)'}">${lbal.toFixed(2)}</td>
+      <td class="mono" style="text-align:center">${lcoef}</td>
+      <td style="text-align:center">${cum}</td>
+      <td><span class="badge ${bm[l.estado]||'bg'}"><span class="dot"></span>${l.estado}</span></td>
+      <td style="font-size:11px;font-weight:600;${ac}">${aler}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════
+// EXPORT CSV
+// ═══════════════════════════════════════════════════
+function exportCSV() {
+  const libros=LS.libros();
+  if(!libros.length){toast('Sin registros','warn');return;}
+  const hdrs=['Folio','Nombre','RFC','Codigo ID','Giro','Municipio','Semestre','Anio','Genero','Tipo','Vol.Inicial','Vol.Entradas','Vol.Salidas','Balance','Unidad','Estado'];
+  const rows=libros.map(l=>{
+    const te=LS.entradas().filter(e=>e.libro_id===l.id).reduce((s,e)=>s+(e.volumen||0),0);
+    const ts=LS.salidas().filter(s=>s.libro_id===l.id).reduce((s,e)=>s+(e.volumen_amparado||0),0);
+    return [l.folio,`"${l.nombre||''}"`,l.rfc||'',l.codigo_id||'',l.giro||'',l.municipio_sol||'',
+      l.semestre===1?'1er Semestre':'2do Semestre',l.anio,l.genero||'',l.tipo_materia,
+      (l.vol_inicial||0).toFixed(4),te.toFixed(4),ts.toFixed(4),((l.vol_inicial||0)+te-ts).toFixed(4),l.unidad||'m3r',l.estado].join(',');
+  });
+  const csv='\uFEFF'+[hdrs.join(','),...rows].join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
+  a.download=`SEMARNAT_DGO_Art92Bis_${new Date().toISOString().split('T')[0]}.csv`;
+  a.click(); toast('📊 CSV exportado');
+}
+
+// ═══════════════════════════════════════════════════
+// EXPORT PDF
+// ═══════════════════════════════════════════════════
+function exportarPDF() {
+  const id=currentId||LS.libros().at(-1)?.id;
+  if(!id){toast('No hay libro para exportar','err');return;}
+  genPDF(id);
+}
+function exportarBalPDF() {
+  const id=getV('sel-lib-bal');
+  if(!id){toast('Seleccione un libro primero','err');return;}
+  genPDF(id);
+}
+
+function genPDF(id) {
+  const l=LS.libros().find(x=>x.id===id);
+  if(!l){toast('Libro no encontrado','err');return;}
+  const ents=LS.entradas().filter(e=>e.libro_id===id);
+  const sals=LS.salidas().filter(s=>s.libro_id===id);
+  const te=ents.reduce((s,e)=>s+(e.volumen||0),0);
+  const ts=sals.reduce((s,e)=>s+(e.volumen_amparado||0),0);
+  const bal=(l.vol_inicial||0)+te-ts;
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'letter'});
+  const W=215.9,M=14; let y=M;
+
+  // Header SEMARNAT
+  doc.setFillColor(109,25,49); doc.rect(0,0,W,32,'F');
+  doc.setFillColor(201,150,60); doc.rect(0,32,W,2,'F');
+  doc.setFillColor(195,195,195); doc.rect(0,0,W,3,'F');
+  doc.setTextColor(232,194,122); doc.setFont('helvetica','bold'); doc.setFontSize(10);
+  doc.text('SECRETARÍA DE MEDIO AMBIENTE Y RECURSOS NATURALES',W/2,10,{align:'center'});
+  doc.setFontSize(8); doc.setTextColor(255,255,255);
+  doc.text('Oficina de Representación en el Estado de Durango — Gestión Forestal y de Suelos',W/2,16,{align:'center'});
+  doc.setFontSize(9); doc.setTextColor(232,194,122);
+  doc.text('Libro de Registro de Entradas y Salidas de Materias Primas y Productos Forestales',W/2,23,{align:'center'});
+  doc.setFontSize(6.5); doc.setTextColor(200,200,200);
+  doc.text('FORMATO TEMPORAL SEMARNAT · Art. 92 Bis LGDFS (DOF 11-04-2022) · En tanto se publica el formato oficial',W/2,28,{align:'center'});
+  y=40;
+
+  // Meta row
+  doc.setFillColor(245,240,228); doc.setDrawColor(180,160,130); doc.rect(M,y,W-M*2,9,'FD');
+  doc.setTextColor(109,25,49); doc.setFont('helvetica','bold'); doc.setFontSize(8);
+  doc.text(`FOLIO: ${l.folio}`,M+4,y+6);
+  doc.text(`ESTADO: ${(l.estado||'').toUpperCase()}`,W/2,y+6,{align:'center'});
+  doc.text(`${l.tipo_materia==='maderable'?'MADERABLES':'NO MADERABLES'} · ${l.semestre===1?'1er':'2do'} SEM. ${l.anio}`,W-M,y+6,{align:'right'});
+  y+=14;
+
+  // Sección I
+  const sec=(t,c)=>{ doc.setFillColor(...c); doc.rect(M,y,W-M*2,7,'F'); doc.setTextColor(232,194,122); doc.setFont('helvetica','bold'); doc.setFontSize(7.5); doc.text(t,M+4,y+5); y+=10; doc.setFont('helvetica','normal'); doc.setTextColor(30,30,30); doc.setFontSize(7.5); };
+  const f2=(l1,v1,l2,v2)=>{ doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.setTextColor(90,90,90); doc.text(l1+':',M+2,y); doc.setFont('helvetica','normal'); doc.setTextColor(20,20,20); doc.setFontSize(7.5); doc.text(String(v1||'—').substring(0,60),M+2,y+4); if(l2){doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.setTextColor(90,90,90); doc.text(l2+':',W/2+2,y); doc.setFont('helvetica','normal'); doc.setTextColor(20,20,20); doc.setFontSize(7.5); doc.text(String(v2||'—').substring(0,40),W/2+2,y+4);} y+=10; };
+
+  sec('I. DATOS GENERALES DEL CENTRO DE ALMACENAMIENTO Y/O TRANSFORMACIÓN',[27,67,50]);
+  f2('(1) Nombre del Titular o Razón Social',l.nombre,'(2) RFC',l.rfc);
+  f2('(3) Representante Legal',l.rep_legal,'(4) Domicilio',l.domicilio);
+  f2('(5) Nombre Comercial',l.nombre_comercial,'(6) Giro Comercial',l.giro);
+  f2('(7) Correo Electrónico',l.correo,'(8) Teléfono',l.telefono);
+  f2('(9) No. Oficio Autorización del Centro',l.oficio_aut,'(10) De Fecha',l.fecha_oficio_aut);
+  f2('(11) Código de Identificación del Centro',l.codigo_id,'(12) Registro Forestal Nacional',l.rfn);
+  y+=2;
+
+  sec('II. REGISTRO DE ENTRADAS DE MATERIAS PRIMAS FORESTALES',[27,67,50]);
+  f2('(13) Periodo',l.periodo?.replace('_',' Sem. '),'(14) Género',l.genero);
+  f2(`(15) Volumen Inicial (${l.unidad||'m³r'})`,l.vol_inicial,'Tipo de Materia Prima',l.tipo_materia==='maderable'?'MADERABLES':'NO MADERABLES');
+
+  if(ents.length) {
+    const cw=[22,22,22,18,18,44,20,34,20];
+    const hdr=['(16)Fecha Ent.','(17)Tipo Doc.','(18)F.Exp.','(19)Folio','(20)Oficio','(22)Proveedor','(23)Cód.ID','(24)Tipo Prod.','(25)Vol.'];
+    let x=M; doc.setFillColor(27,67,50); doc.setTextColor(232,194,122); doc.setFont('helvetica','bold'); doc.setFontSize(6);
+    hdr.forEach((h,i)=>{doc.rect(x,y,cw[i],5,'F');doc.text(h,x+1,y+3.5,{maxWidth:cw[i]-2});x+=cw[i];}); y+=5;
+    ents.slice(0,10).forEach(e=>{
+      x=M; const rv=[e.fecha_entrada||'',e.tipo_documento||'',e.fecha_expedicion||'',e.folio_imprenta||'',e.num_oficio_aut||'',e.nombre_proveedor||'',e.codigo_proveedor||'',e.tipo_producto||'',(e.volumen||0).toFixed(4)];
+      doc.setFillColor(248,244,238); doc.setDrawColor(200,190,180); doc.setFont('helvetica','normal'); doc.setTextColor(20,20,20); doc.setFontSize(6);
+      rv.forEach((v,i)=>{doc.rect(x,y,cw[i],4.5,'FD');doc.text(String(v).substring(0,15),x+1,y+3.2);x+=cw[i];});
+      y+=4.5; if(y>248){doc.addPage();y=18;}
+    });
+    doc.setFillColor(220,238,220); doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.rect(M,y,W-M*2,5,'F');
+    doc.setTextColor(27,67,50); doc.text(`(26) Volumen Ingresado Durante el Período: ${te.toFixed(4)} ${l.unidad||'m³r'}`,M+4,y+3.5); y+=9;
+  }
+
+  if(y>232){doc.addPage();y=18;}
+  sec('III. REGISTRO DE SALIDAS DE PRODUCTOS FORESTALES',[109,25,49]);
+  if(sals.length) {
+    const cw2=[22,22,16,22,22,46,22,34,20];
+    const hdr2=['(30)Tipo Doc.','(31)F.Exp.','(32)Folio','(33)Oficio','(34)F.Oficio','(35)Destinatario','(36)Cód.ID','(37)Tipo Prod.','(38)Vol.'];
+    let x2=M; doc.setFillColor(109,25,49); doc.setTextColor(232,194,122); doc.setFont('helvetica','bold'); doc.setFontSize(6);
+    hdr2.forEach((h,i)=>{doc.rect(x2,y,cw2[i],5,'F');doc.text(h,x2+1,y+3.5,{maxWidth:cw2[i]-2});x2+=cw2[i];}); y+=5;
+    sals.slice(0,10).forEach(s=>{
+      x2=M; const rv2=[s.tipo_documento||'',s.fecha_expedicion||'',s.folio||'',s.num_oficio_aut_docs||'',s.fecha_oficio_aut||'',s.destinatario||'',s.codigo_destinatario||'',s.tipo_producto||'',(s.volumen_amparado||0).toFixed(4)];
+      doc.setFillColor(248,241,243); doc.setDrawColor(200,180,185); doc.setFont('helvetica','normal'); doc.setTextColor(20,20,20); doc.setFontSize(6);
+      rv2.forEach((v,i)=>{doc.rect(x2,y,cw2[i],4.5,'FD');doc.text(String(v).substring(0,15),x2+1,y+3.2);x2+=cw2[i];});
+      y+=4.5; if(y>248){doc.addPage();y=18;}
+    });
+    doc.setFillColor(238,220,224); doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.rect(M,y,W-M*2,5,'F');
+    doc.setTextColor(109,25,49); doc.text(`(39) Volumen Total de Salidas: ${ts.toFixed(4)} ${l.unidad||'m³r'}`,M+4,y+3.5); y+=9;
+  }
+
+  // Balance campo 40
+  if(y>232){doc.addPage();y=18;}
+  const bW=(W-M*2)/4;
+  doc.setFillColor(27,67,50); doc.rect(M,y,W-M*2,6,'F');
+  doc.setTextColor(232,194,122); doc.setFont('helvetica','bold'); doc.setFontSize(7.5);
+  doc.text('(40) BALANCE DE EXISTENCIAS DEL PERÍODO — Art. 92 Bis LGDFS',M+4,y+4.2); y+=6;
+  const bv=[(l.vol_inicial||0),te,ts,bal], bl=['Existencia Inicial','+ Entradas (C.26)','− Salidas (C.39)','= Balance Final'];
+  const bc=[[232,244,234],[224,236,250],[250,224,226],[27,67,50]], btc=[[27,67,50],[21,82,130],[109,25,49],[232,194,122]];
+  bv.forEach((v,i)=>{doc.setFillColor(...bc[i]);doc.setDrawColor(180,180,180);doc.rect(M+i*bW,y,bW,14,'FD');doc.setFont('helvetica','bold');doc.setFontSize(5.5);doc.setTextColor(100,100,100);doc.text(bl[i],M+i*bW+bW/2,y+4,{align:'center'});doc.setFontSize(11);doc.setTextColor(...btc[i]);doc.text(v.toFixed(2),M+i*bW+bW/2,y+11,{align:'center'});}); y+=18;
+
+  // Campo 41
+  doc.setFillColor(253,243,220); doc.setDrawColor(201,150,60); doc.rect(M,y,W-M*2,7,'FD');
+  doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.setTextColor(100,80,20);
+  doc.text(`(41) Coeficiente de Transformación: ${te>0?(ts/te).toFixed(4):'N/A — Solo aplica centros de transformación'}`,M+4,y+4); y+=11;
+
+  // Firmas
+  doc.setFillColor(245,240,228); doc.rect(M,y,W-M*2,17,'F');
+  const fw=(W-M*2)/2;
+  doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.setTextColor(27,67,50);
+  doc.text('(27) Nombre y firma — Titular o Representante Legal (Sección II):',M+4,y+4);
+  doc.text(String(l.firmante_ent||'_________________________').substring(0,35),M+4,y+10);
+  doc.line(M+4,y+14,M+fw-4,y+14);
+  doc.text('(42) Nombre y firma — Titular o Representante Legal (Sección III):',M+fw+4,y+4);
+  doc.text(String(l.firmante_sal||'_________________________').substring(0,35),M+fw+4,y+10);
+  doc.line(M+fw+4,y+14,W-M-4,y+14);
+
+  // Footer
+  doc.setFillColor(27,67,50); doc.rect(0,272,W,20,'F');
+  doc.setFillColor(201,150,60); doc.rect(0,272,W,1,'F');
+  doc.setTextColor(183,228,199); doc.setFont('helvetica','normal'); doc.setFontSize(6.5);
+  doc.text(`Folio: ${l.folio} · Estado: ${l.estado} · Generado: ${new Date().toLocaleString('es-MX')}`,W/2,279,{align:'center'});
+  doc.text('SEMARNAT · Oficina de Representación Durango · Formato Temporal Art. 92 Bis LGDFS (DOF 11-04-2022)',W/2,284,{align:'center'});
+
+  doc.save(`${l.folio}_Formato_Temporal_SEMARNAT.pdf`);
+  toast('📄 PDF generado: '+l.folio);
+}
+
+// ═══════════════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════════════
+function saveConf(){
+  SB_URL=document.getElementById('sb-url').value.trim();
+  SB_KEY=document.getElementById('sb-key').value.trim();
+  localStorage.setItem('sb_url',SB_URL); localStorage.setItem('sb_key',SB_KEY);
+  toast('⚙️ Configuración guardada'); checkDB();
+}
+async function testSB(){
+  const url=document.getElementById('sb-url').value.trim(), key=document.getElementById('sb-key').value.trim();
+  const res=document.getElementById('sb-res');
+  res.innerHTML='<div class="alerta a-warn"><span class="ai">⏳</span>Probando conexión...</div>';
+  try{
+    const r=await fetch(`${url}/rest/v1/`,{headers:{'apikey':key,'Authorization':`Bearer ${key}`}});
+    if(r.status<500){res.innerHTML='<div class="alerta a-ok"><span class="ai">✅</span>Conexión exitosa. Ejecute el SQL para crear las tablas y luego cargue el archivo centros_forestales_data.sql</div>';dbOK=true;}
+    else throw new Error('HTTP '+r.status);
+  }catch(e){res.innerHTML=`<div class="alerta a-err"><span class="ai">❌</span>Error: ${e.message}</div>`;}
+}
+function clearLocal(){
+  if(!confirm('¿Eliminar TODOS los datos locales?')) return;
+  ['libros','entradas','salidas','folioN','centrosBD'].forEach(k=>localStorage.removeItem(k));
+  folioN=1; centrosBD=[]; updDash(); cargaExp(); toast('Datos locales eliminados','warn');
+}
+function togSQL(){ document.getElementById('sql-div').classList.toggle('hidden'); }
+function copSQL(){ navigator.clipboard.writeText(SQL_SCHEMA).then(()=>toast('📋 SQL copiado')); }
+
+// ═══════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════
+function toast(msg,tipo='ok'){
+  const box=document.getElementById('toastBox');
+  const el=document.createElement('div');
+  el.className=`toast ${tipo==='err'?'err':tipo==='warn'?'warn':''}`;
+  const ico=tipo==='err'?'❌':tipo==='warn'?'⚠️':'✅';
+  el.innerHTML=`<span style="font-size:16px">${ico}</span><span>${msg}</span>`;
+  box.appendChild(el);
+  setTimeout(()=>{el.style.transition='all .3s';el.style.opacity='0';el.style.transform='translateX(110%)';setTimeout(()=>el.remove(),320);},3500);
+}
+</script>
+</body>
+</html>
